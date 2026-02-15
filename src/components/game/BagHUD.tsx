@@ -13,6 +13,7 @@ interface BagHUDProps {
   swapBackpackSlots: (from: number, to: number) => void;
   moveToEquipSlot: (bpIndex: number, equipSlot: EquipSlot) => void;
   moveToBackpackSlot: (equipSlot: EquipSlot, bpIndex: number) => void;
+  moveHotbarToBackpack: (hotbarIndex: number, bpIndex: number) => void;
   totalWeight: () => number;
 }
 
@@ -24,7 +25,7 @@ const EQUIP_SLOTS: { key: EquipSlot; label: string }[] = [
 
 export function BagHUD({
   state, closeBag, equipItem, unequipItem, swapBackpackSlots,
-  moveToEquipSlot, moveToBackpackSlot, totalWeight,
+  moveToEquipSlot, moveToBackpackSlot, moveHotbarToBackpack, totalWeight,
 }: BagHUDProps) {
   const weight = totalWeight();
   const maxWeight = 49;
@@ -39,6 +40,8 @@ export function BagHUD({
       swapBackpackSlots(sourceIndex as number, bpIndex);
     } else if (sourceType === 'equip') {
       moveToBackpackSlot(sourceIndex as EquipSlot, bpIndex);
+    } else if (sourceType === 'hotbar') {
+      moveHotbarToBackpack(sourceIndex as number, bpIndex);
     }
     setDragSource(null);
   };

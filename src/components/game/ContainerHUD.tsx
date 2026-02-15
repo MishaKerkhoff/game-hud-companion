@@ -17,6 +17,8 @@ interface ContainerHUDProps {
   moveBackpackToContainerSlot: (bpIndex: number, containerIndex: number) => void;
   moveContainerToEquipSlot: (containerIndex: number, equipSlot: EquipSlot) => void;
   moveEquipToContainerSlot: (equipSlot: EquipSlot, containerIndex: number) => void;
+  moveHotbarToBackpack: (hotbarIndex: number, bpIndex: number) => void;
+  moveHotbarToContainer: (hotbarIndex: number, containerIndex: number) => void;
   totalWeight: () => number;
 }
 
@@ -31,6 +33,7 @@ export function ContainerHUD({
   swapBackpackSlots, moveToEquipSlot, moveToBackpackSlot,
   moveContainerToBackpackSlot, moveBackpackToContainerSlot,
   moveContainerToEquipSlot, moveEquipToContainerSlot,
+  moveHotbarToBackpack, moveHotbarToContainer,
   totalWeight,
 }: ContainerHUDProps) {
   const weight = totalWeight();
@@ -43,6 +46,8 @@ export function ContainerHUD({
       moveToBackpackSlot(sourceIndex as EquipSlot, bpIndex);
     } else if (sourceType === 'container') {
       moveContainerToBackpackSlot(sourceIndex as number, bpIndex);
+    } else if (sourceType === 'hotbar') {
+      moveHotbarToBackpack(sourceIndex as number, bpIndex);
     }
   };
 
@@ -59,6 +64,8 @@ export function ContainerHUD({
       moveBackpackToContainerSlot(sourceIndex as number, containerIndex);
     } else if (sourceType === 'equip') {
       moveEquipToContainerSlot(sourceIndex as EquipSlot, containerIndex);
+    } else if (sourceType === 'hotbar') {
+      moveHotbarToContainer(sourceIndex as number, containerIndex);
     }
   };
 
