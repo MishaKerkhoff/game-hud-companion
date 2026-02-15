@@ -2,6 +2,7 @@ import { useGameState } from '@/hooks/useGameState';
 import { RoamingHUD } from '@/components/game/RoamingHUD';
 import { ContainerHUD } from '@/components/game/ContainerHUD';
 import { BagHUD } from '@/components/game/BagHUD';
+import { HotbarHUD } from '@/components/game/HotbarHUD';
 
 const Index = () => {
   const {
@@ -37,9 +38,6 @@ const Index = () => {
         adjustShield={adjustShield}
         toggleContainer={toggleContainer}
         toggleBag={toggleBag}
-        swapHotbarSlots={swapHotbarSlots}
-        moveBackpackToHotbar={moveBackpackToHotbar}
-        moveContainerToHotbar={moveContainerToHotbar}
       />
 
       {/* Bag only (no container) */}
@@ -78,6 +76,15 @@ const Index = () => {
           totalWeight={totalWeight}
         />
       )}
+
+      {/* Hotbar always on top so drag-and-drop works across overlays */}
+      <HotbarHUD
+        state={state}
+        setActiveSlot={setActiveSlot}
+        swapHotbarSlots={swapHotbarSlots}
+        moveBackpackToHotbar={moveBackpackToHotbar}
+        moveContainerToHotbar={moveContainerToHotbar}
+      />
     </div>
   );
 };

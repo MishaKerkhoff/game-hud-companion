@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { GameState } from '@/types/game';
-import { InventorySlotUI } from './InventorySlotUI';
 import { useIsMobile } from '@/hooks/use-mobile';
 import {
   Clock, Settings, Heart, ChevronUp, ChevronDown,
@@ -14,9 +13,6 @@ interface RoamingHUDProps {
   adjustShield: (delta: number) => void;
   toggleContainer: () => void;
   toggleBag: () => void;
-  swapHotbarSlots: (from: number, to: number) => void;
-  moveBackpackToHotbar: (bpIndex: number, hotbarIndex: number) => void;
-  moveContainerToHotbar: (containerIndex: number, hotbarIndex: number) => void;
 }
 
 function formatTime(seconds: number) {
@@ -27,7 +23,6 @@ function formatTime(seconds: number) {
 
 export function RoamingHUD({
   state, setActiveSlot, adjustHealth, adjustShield, toggleContainer, toggleBag,
-  swapHotbarSlots, moveBackpackToHotbar, moveContainerToHotbar,
 }: RoamingHUDProps) {
   const isMobile = useIsMobile();
 
@@ -45,16 +40,8 @@ export function RoamingHUD({
   const healthPercent = (state.health / state.maxHealth) * 100;
   const shieldPercent = (state.shield / state.maxShield) * 100;
 
-  const handleHotbarDragStart = (type: string, index: number | string) => {};
-  const handleHotbarDrop = (targetIndex: number) => (sourceType: string, sourceIndex: number | string) => {
-    if (sourceType === 'hotbar') {
-      swapHotbarSlots(sourceIndex as number, targetIndex);
-    } else if (sourceType === 'backpack') {
-      moveBackpackToHotbar(sourceIndex as number, targetIndex);
-    } else if (sourceType === 'container') {
-      moveContainerToHotbar(sourceIndex as number, targetIndex);
-    }
-  };
+
+
 
   return (
     <div className="absolute inset-0 pointer-events-none">
@@ -127,28 +114,6 @@ export function RoamingHUD({
           <div className="absolute left-0 top-1/2 -translate-y-1/2 w-2.5 h-0.5 bg-foreground/70 rounded-full" />
           <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2.5 h-0.5 bg-foreground/70 rounded-full" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-1 rounded-full bg-destructive" />
-        </div>
-      </div>
-
-      {/* Bottom-Center: Hotbar (5 slots) */}
-      <div className="absolute bottom-3 md:bottom-5 left-1/2 -translate-x-1/2 pointer-events-auto">
-        <div className="hud-panel px-2 py-2 flex gap-1 md:gap-1.5">
-          {state.hotbar.map((slot, i) => (
-            <InventorySlotUI
-              key={i}
-              slot={slot}
-              index={i}
-              isActive={state.activeHotbarSlot === i}
-              showNumber
-              isWeaponSlot={i === 0}
-              size={isMobile ? 'sm' : 'md'}
-              onClick={() => setActiveSlot(i)}
-              dragType="hotbar"
-              dragIndex={i}
-              onDragStart={handleHotbarDragStart}
-              onDrop={handleHotbarDrop(i)}
-            />
-          ))}
         </div>
       </div>
 
