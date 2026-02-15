@@ -1,6 +1,7 @@
 import { InventorySlot } from '@/types/game';
 import { ItemIcon } from './ItemIcon';
 import { cn } from '@/lib/utils';
+import { useRef } from 'react';
 
 interface InventorySlotUIProps {
   slot: InventorySlot;
@@ -10,6 +11,11 @@ interface InventorySlotUIProps {
   size?: 'sm' | 'md' | 'lg';
   onClick?: () => void;
   label?: string;
+  isWeaponSlot?: boolean;
+  dragType?: string;
+  dragIndex?: number | string;
+  onDragStart?: (type: string, index: number | string) => void;
+  onDrop?: (type: string, index: number | string) => void;
 }
 
 const sizes = {
@@ -20,17 +26,40 @@ const sizes = {
 
 export function InventorySlotUI({
   slot, index, isActive, showNumber, size = 'md', onClick, label,
+  isWeaponSlot, dragType, dragIndex, onDragStart, onDrop,
 }: InventorySlotUIProps) {
   const rarity = slot.item?.rarity;
+
+  const handleDragStart = (e: React.DragEvent) => {
+    if (!slot.item || !dragType || dragIndex === undefined || !onDragStart) return;
+    e.dataTransfer.setData('text/plain', JSON.stringify({ type: dragType, index: dragIndex }));
+    onDragStart(dragType, dragIndex);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    if (!onDrop || dragIndex === undefined) return;
+    const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+    onDrop(data.type, data.index);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
 
   return (
     <button
       onClick={onClick}
+      draggable={!!slot.item && !!dragType}
+      onDragStart={handleDragStart}
+      onDrop={handleDrop}
+      onDragOver={handleDragOver}
       className={cn(
         'slot-base relative flex items-center justify-center cursor-pointer select-none',
         sizes[size],
         isActive && 'slot-active',
         rarity && `rarity-${rarity}`,
+        isWeaponSlot && 'ring-2 ring-destructive/40',
       )}
       title={slot.item?.name || (label ?? 'Empty')}
     >

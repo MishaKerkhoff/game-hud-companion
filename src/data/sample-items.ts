@@ -4,27 +4,22 @@ export const ITEMS: Record<string, GameItem> = {
   assault_rifle: {
     id: 'assault_rifle', name: 'Assault Rifle', icon: 'Crosshair',
     category: 'weapon', stackable: false, maxStack: 1, weight: 3.5,
-    equipSlot: 'weapon1', rarity: 'rare',
+    equipSlot: 'weapon', rarity: 'rare',
   },
   shotgun: {
     id: 'shotgun', name: 'Shotgun', icon: 'Target',
     category: 'weapon', stackable: false, maxStack: 1, weight: 4.0,
-    equipSlot: 'weapon2', rarity: 'uncommon',
+    equipSlot: 'weapon', rarity: 'uncommon',
   },
-  helmet: {
-    id: 'helmet', name: 'Combat Helmet', icon: 'HardHat',
-    category: 'armor', stackable: false, maxStack: 1, weight: 1.5,
-    equipSlot: 'head', rarity: 'uncommon',
-  },
-  vest: {
-    id: 'vest', name: 'Tactical Vest', icon: 'Shield',
+  shield_item: {
+    id: 'shield_item', name: 'Tactical Shield', icon: 'Shield',
     category: 'armor', stackable: false, maxStack: 1, weight: 3.0,
-    equipSlot: 'body', rarity: 'rare',
+    equipSlot: 'shield', rarity: 'rare',
   },
   backpack_item: {
     id: 'backpack_item', name: 'Military Pack', icon: 'Backpack',
     category: 'armor', stackable: false, maxStack: 1, weight: 0.5,
-    equipSlot: 'backpack', rarity: 'epic',
+    equipSlot: 'bag', rarity: 'epic',
   },
   medkit: {
     id: 'medkit', name: 'Med Kit', icon: 'Heart',
@@ -54,7 +49,7 @@ export const ITEMS: Record<string, GameItem> = {
   scope: {
     id: 'scope', name: '4x Scope', icon: 'Eye',
     category: 'accessory', stackable: false, maxStack: 1, weight: 0.3,
-    equipSlot: 'accessory', rarity: 'epic',
+    rarity: 'epic',
   },
   grenade: {
     id: 'grenade', name: 'Frag Grenade', icon: 'Bomb',
@@ -70,33 +65,35 @@ export const createSlot = (itemId: string, count: number = 1): InventorySlot => 
   count,
 });
 
+// 5 slots: weapon slot + 4 item slots
 export const initialHotbar: InventorySlot[] = [
   createSlot('assault_rifle'),
-  createSlot('shotgun'),
   createSlot('medkit', 3),
   createSlot('bandage', 5),
   createSlot('grenade', 2),
   emptySlot(),
-  emptySlot(),
-  emptySlot(),
 ];
 
+// 12 slots (3 rows x 4 cols)
 export const initialBackpack: InventorySlot[] = [
   createSlot('ammo_rifle', 30),
   createSlot('ammo_shotgun', 15),
   createSlot('energy_drink', 2),
   createSlot('bandage', 3),
   emptySlot(),
-  ...Array(18).fill(null).map(() => emptySlot()),
+  emptySlot(),
+  emptySlot(),
+  emptySlot(),
+  emptySlot(),
+  emptySlot(),
+  emptySlot(),
+  emptySlot(),
 ];
 
 export const initialEquipment: Record<EquipSlot, InventorySlot> = {
-  weapon1: createSlot('assault_rifle'),
-  weapon2: createSlot('shotgun'),
-  head: createSlot('helmet'),
-  body: createSlot('vest'),
-  backpack: createSlot('backpack_item'),
-  accessory: emptySlot(),
+  weapon: createSlot('assault_rifle'),
+  bag: createSlot('backpack_item'),
+  shield: createSlot('shield_item'),
 };
 
 export const initialContainerLoot: InventorySlot[] = [

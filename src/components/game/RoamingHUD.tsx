@@ -1,17 +1,20 @@
 import { useEffect } from 'react';
-import { GameState, InventorySlot } from '@/types/game';
+import { GameState } from '@/types/game';
 import { InventorySlotUI } from './InventorySlotUI';
 import { useIsMobile } from '@/hooks/use-mobile';
 import {
-  Clock, Cloud, Zap, Settings, Heart, Droplets, ChevronUp, ChevronDown,
-  ChevronLeft, ChevronRight, Swords, Flame, AlertTriangle,
+  Clock, Settings, Heart, Droplets, Zap, ChevronUp, ChevronDown,
+  ChevronLeft, ChevronRight, Swords, Flame, Shield,
 } from 'lucide-react';
 
 interface RoamingHUDProps {
   state: GameState;
   setActiveSlot: (slot: number) => void;
   adjustHealth: (delta: number) => void;
+  adjustShield: (delta: number) => void;
   toggleContainer: () => void;
+  toggleBag: () => void;
+  swapHotbarSlots: (from: number, to: number) => void;
 }
 
 function formatTime(seconds: number) {
@@ -20,40 +23,44 @@ function formatTime(seconds: number) {
   return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
 }
 
-export function RoamingHUD({ state, setActiveSlot, adjustHealth, toggleContainer }: RoamingHUDProps) {
+export function RoamingHUD({
+  state, setActiveSlot, adjustHealth, adjustShield, toggleContainer, toggleBag, swapHotbarSlots,
+}: RoamingHUDProps) {
   const isMobile = useIsMobile();
 
   // Keyboard shortcuts
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       const num = parseInt(e.key);
-      if (num >= 1 && num <= 8) setActiveSlot(num - 1);
+      if (num >= 1 && num <= 5) setActiveSlot(num - 1);
       if (e.key === 'e' || e.key === 'E') toggleContainer();
+      if (e.key === 'b' || e.key === 'B') toggleBag();
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [setActiveSlot, toggleContainer]);
+  }, [setActiveSlot, toggleContainer, toggleBag]);
 
   const healthPercent = (state.health / state.maxHealth) * 100;
+  const shieldPercent = (state.shield / state.maxShield) * 100;
+
+  const handleHotbarDragStart = (type: string, index: number | string) => {};
+  const handleHotbarDrop = (targetIndex: number) => (sourceType: string, sourceIndex: number | string) => {
+    if (sourceType === 'hotbar') {
+      swapHotbarSlots(sourceIndex as number, targetIndex);
+    }
+  };
 
   return (
     <div className="absolute inset-0 pointer-events-none">
-      {/* Top-Left: Status */}
-      <div className="absolute top-3 left-3 md:top-5 md:left-5 pointer-events-auto flex flex-col gap-2">
+      {/* Top-Left: Map Name + Timer */}
+      <div className="absolute top-3 left-3 md:top-5 md:left-5 pointer-events-auto flex flex-col gap-1">
+        <div className="hud-panel px-3 py-1.5">
+          <span className="font-game text-xs text-muted-foreground game-outline">{state.mapName}</span>
+        </div>
         <div className="hud-panel px-3 py-2 flex items-center gap-2">
           <Clock size={18} className="text-primary" />
           <span className="font-game text-lg text-primary game-outline">
             {formatTime(state.gameTime)}
-          </span>
-        </div>
-        <div className="hud-panel px-3 py-1.5 flex items-center gap-2">
-          <Cloud size={16} className="text-secondary" />
-          <span className="font-bold text-sm text-foreground">{state.weather}</span>
-        </div>
-        <div className="hud-panel px-3 py-1.5 flex items-center gap-2">
-          <AlertTriangle size={16} style={{ color: 'hsl(var(--storm))' }} />
-          <span className="font-bold text-sm" style={{ color: 'hsl(var(--storm))' }}>
-            Storm: {formatTime(state.stormCountdown)}
           </span>
         </div>
       </div>
@@ -76,27 +83,38 @@ export function RoamingHUD({ state, setActiveSlot, adjustHealth, toggleContainer
         </div>
       </div>
 
-      {/* Bottom-Left: Player stats */}
+      {/* Bottom-Left: Health + Shield bars */}
       <div className="absolute bottom-20 md:bottom-24 left-3 md:left-5 pointer-events-auto flex flex-col gap-2">
-        {/* Health bar */}
-        <div className="hud-panel px-3 py-2 w-44 md:w-56">
-          <div className="flex items-center gap-2 mb-1">
-            <Heart size={16} className="text-destructive fill-destructive" />
-            <span className="font-black text-sm text-foreground">{state.health}/{state.maxHealth}</span>
+        {/* Health + Shield side by side */}
+        <div className="flex items-center gap-2">
+          {/* Health bar */}
+          <div className="hud-panel px-2 py-2 flex items-center gap-2 w-28 md:w-36">
+            <Heart size={16} className="text-destructive fill-destructive shrink-0" />
+            <div className="flex-1 h-4 rounded-full overflow-hidden" style={{ background: 'hsl(var(--health-bg))' }}>
+              <div
+                className="h-full rounded-full transition-all duration-500 ease-out"
+                style={{
+                  width: `${healthPercent}%`,
+                  background: 'linear-gradient(90deg, hsl(0 70% 40%), hsl(0 80% 55%))',
+                  boxShadow: '0 0 8px hsl(0 80% 55% / 0.5)',
+                }}
+              />
+            </div>
           </div>
-          <div className="w-full h-4 rounded-full overflow-hidden" style={{ background: 'hsl(var(--health-bg))' }}>
-            <div
-              className="h-full rounded-full transition-all duration-500 ease-out"
-              style={{
-                width: `${healthPercent}%`,
-                background: healthPercent > 50
-                  ? 'linear-gradient(90deg, hsl(120 70% 40%), hsl(120 70% 55%))'
-                  : healthPercent > 25
-                  ? 'linear-gradient(90deg, hsl(40 90% 45%), hsl(45 100% 55%))'
-                  : 'linear-gradient(90deg, hsl(0 70% 40%), hsl(0 80% 55%))',
-                boxShadow: `0 0 8px ${healthPercent > 50 ? 'hsl(120 70% 45% / 0.5)' : healthPercent > 25 ? 'hsl(45 100% 55% / 0.5)' : 'hsl(0 80% 55% / 0.5)'}`,
-              }}
-            />
+
+          {/* Shield bar */}
+          <div className="hud-panel px-2 py-2 flex items-center gap-2 w-28 md:w-36">
+            <div className="flex-1 h-4 rounded-full overflow-hidden" style={{ background: 'hsl(210 30% 15%)' }}>
+              <div
+                className="h-full rounded-full transition-all duration-500 ease-out"
+                style={{
+                  width: `${shieldPercent}%`,
+                  background: 'linear-gradient(90deg, hsl(210 70% 40%), hsl(210 80% 60%))',
+                  boxShadow: '0 0 8px hsl(210 80% 55% / 0.5)',
+                }}
+              />
+            </div>
+            <Shield size={16} className="text-secondary fill-secondary/30 shrink-0" />
           </div>
         </div>
 
@@ -112,7 +130,7 @@ export function RoamingHUD({ state, setActiveSlot, adjustHealth, toggleContainer
           </div>
         </div>
 
-        {/* Demo: health buttons */}
+        {/* Demo: health/shield buttons */}
         <div className="flex gap-1">
           <button
             onClick={() => adjustHealth(-10)}
@@ -126,10 +144,22 @@ export function RoamingHUD({ state, setActiveSlot, adjustHealth, toggleContainer
           >
             +10 HP
           </button>
+          <button
+            onClick={() => adjustShield(-10)}
+            className="hud-panel px-2 py-1 text-xs font-bold text-secondary hover:border-secondary transition-colors"
+          >
+            -10 🛡
+          </button>
+          <button
+            onClick={() => adjustShield(10)}
+            className="hud-panel px-2 py-1 text-xs font-bold text-secondary hover:border-secondary transition-colors"
+          >
+            +10 🛡
+          </button>
         </div>
       </div>
 
-      {/* Bottom-Center: Hotbar */}
+      {/* Bottom-Center: Hotbar (5 slots) */}
       <div className="absolute bottom-3 md:bottom-5 left-1/2 -translate-x-1/2 pointer-events-auto">
         <div className="hud-panel px-2 py-2 flex gap-1 md:gap-1.5">
           {state.hotbar.map((slot, i) => (
@@ -139,20 +169,31 @@ export function RoamingHUD({ state, setActiveSlot, adjustHealth, toggleContainer
               index={i}
               isActive={state.activeHotbarSlot === i}
               showNumber
+              isWeaponSlot={i === 0}
               size={isMobile ? 'sm' : 'md'}
               onClick={() => setActiveSlot(i)}
+              dragType="hotbar"
+              dragIndex={i}
+              onDragStart={handleHotbarDragStart}
+              onDrop={handleHotbarDrop(i)}
             />
           ))}
         </div>
       </div>
 
-      {/* Container toggle (demo) */}
-      <div className="absolute bottom-3 md:bottom-5 right-3 md:right-5 pointer-events-auto">
+      {/* Right-side buttons */}
+      <div className="absolute bottom-3 md:bottom-5 right-3 md:right-5 pointer-events-auto flex flex-col gap-2">
+        <button
+          onClick={toggleBag}
+          className="hud-panel px-3 py-2 font-bold text-sm text-foreground hover:border-primary transition-colors"
+        >
+          Bag [B]
+        </button>
         <button
           onClick={toggleContainer}
           className="hud-panel px-3 py-2 font-bold text-sm text-primary hover:border-primary transition-colors"
         >
-          Open Loot [E]
+          Loot [E]
         </button>
       </div>
 

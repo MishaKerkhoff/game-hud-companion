@@ -1,5 +1,5 @@
 export type ItemCategory = 'weapon' | 'armor' | 'consumable' | 'ammo' | 'material' | 'accessory';
-export type EquipSlot = 'weapon1' | 'weapon2' | 'head' | 'body' | 'backpack' | 'accessory';
+export type EquipSlot = 'weapon' | 'bag' | 'shield';
 
 export interface GameItem {
   id: string;
@@ -21,17 +21,18 @@ export interface InventorySlot {
 export interface GameState {
   health: number;
   maxHealth: number;
+  shield: number;
+  maxShield: number;
   thirst: number;
   energy: number;
   activeHotbarSlot: number;
-  hotbar: InventorySlot[];
-  backpack: InventorySlot[];
-  backpackCapacity: number;
+  hotbar: InventorySlot[]; // 5 slots: [weapon, item, item, item, item]
+  backpack: InventorySlot[]; // 12 slots (3x4)
   equipment: Record<EquipSlot, InventorySlot>;
   containerLoot: InventorySlot[];
   containerName: string;
   isContainerOpen: boolean;
+  isBagOpen: boolean;
   gameTime: number; // seconds
-  weather: string;
-  stormCountdown: number;
+  mapName: string;
 }
