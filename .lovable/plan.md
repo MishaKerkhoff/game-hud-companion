@@ -1,98 +1,65 @@
 
 
-# Game HUD Prototype — Brawl Stars Style × Duckov Functionality
+# 3D Top-Down Character with Movement (Brawl Stars Style)
 
 ## Overview
-A fully interactive, responsive game HUD prototype with two switchable views: **Roaming HUD** and **Container/Loot HUD**. The visual style draws from Brawl Stars' bold, cartoonish, colorful UI (thick outlines, vibrant colors, rounded shapes, strong shadows), while the layout and functionality mirrors Duckov's survival game HUDs.
+Add a 3D scene behind the existing HUD with a movable character viewed from a tilted orthographic camera, matching the Brawl Stars top-down perspective.
 
----
+## New Dependencies
+- `three` (3D engine)
+- `@react-three/fiber@^8.18` (React 18 compatible)
+- `@react-three/drei@^9.122.0`
 
-## View 1: Roaming HUD
+## New Files
 
-The default gameplay view overlaying a dark game-like background.
+### 1. `src/hooks/useCharacterMovement.ts`
+- Tracks WASD/Arrow key input and converts to a movement vector
+- Accepts an optional joystick vector (for mobile)
+- Updates character position each frame using `useFrame`
+- Disables movement when `isBagOpen` or `isContainerOpen` is true
+- Returns position (`[x, 0, z]`) and rotation (facing direction)
+- Movement speed ~5 units/sec
 
-**Top-Left — Status Info:**
-- Game clock/timer (bold digital style)
-- Weather indicator (e.g., "Night / Sunny")
-- Storm countdown timer with icon
+### 2. `src/components/game/Character.tsx`
+- A `<group>` containing:
+  - Cylinder body (bright blue `MeshToonMaterial`)
+  - Sphere head (skin tone) sitting on top
+  - Small sphere eyes (black)
+- Rotates to face movement direction
+- Subtle idle bobbing animation when stationary
+- Walking bob when moving
+- Casts shadow onto the ground
 
-**Top-Right:**
-- Controls/settings button
+### 3. `src/components/game/Ground.tsx`
+- Large flat plane with a green grass-colored material
+- Grid lines overlay for visual depth
+- Receives shadows
+- Some scattered decorative elements (small dark circles as rocks) to give a sense of motion
 
-**Center:**
-- Crosshair/reticle
+### 4. `src/components/game/GameScene.tsx`
+- `<Canvas>` wrapper component
+- `<OrthographicCamera>` with zoom ~50, positioned above and tilted ~55 degrees (Brawl Stars angle)
+- Camera smoothly follows character using `lerp` in `useFrame`
+- Ambient light + directional light with shadow mapping
+- Renders `<Ground>` and `<Character>`
+- Accepts `isPaused` prop to freeze movement when menus are open
 
-**Bottom-Center — Hotbar:**
-- 8 numbered inventory slots (keys 1-8)
-- Active slot highlighted with a glow effect
-- Clicking a slot selects it as active
-- Slots can display item icons and stack counts
+## Modified Files
 
-**Bottom-Left — Player Stats:**
-- Health bar (animated, Brawl Stars style with bold colors)
-- Thirst/energy icon indicators with circular progress
+### 5. `src/pages/Index.tsx`
+- Replace the static gradient background `div` with `<GameScene>` as the background layer
+- Pass `isPaused={state.isBagOpen || state.isContainerOpen}` to the scene
+- Keep all HUD layers exactly as they are, rendered on top
 
-**Bottom-Left (Mobile) — Virtual Joystick:**
-- D-pad style movement control (visible on mobile only)
+### 6. `src/components/game/RoamingHUD.tsx`
+- Wire the mobile virtual joystick buttons to emit movement direction vectors
+- Add `onJoystickMove` callback prop
+- On pointer-down for each direction button, set the vector; on pointer-up, clear it
 
-**Bottom-Right (Mobile) — Action Buttons:**
-- Attack and special ability buttons (visible on mobile only)
-
----
-
-## View 2: Container/Loot HUD
-
-Opens as an overlay when the player "interacts with a container" (toggled via a button).
-
-**Top-Center — Category Tabs:**
-- Icon tabs for filtering (all, weapons, armor, consumables, etc.)
-- Weight indicator (e.g., "6.3/49kg")
-
-**Left Panel — Player Equipment & Backpack:**
-- Equipment slots grid (weapon 1, weapon 2, body, head, backpack, accessories)
-- Backpack inventory grid (e.g., 5×5 slots with capacity like "1/23")
-- Weight bar at bottom
-
-**Right Panel — Container Loot:**
-- Title showing container name and item count (e.g., "Loot (10/10)")
-- Item grid showing available loot with icons and stack counts
-
-**Interactions:**
-- Click an item in loot panel to pick it up (moves to backpack)
-- Click an item in backpack to drop it (moves to loot or removes)
-- Click equipment slots to equip/unequip items
-- Drag-and-drop support for moving items between panels
-
-**Bottom — Quick Bar:**
-- Same hotbar slots from the roaming view, persistent at bottom
-
----
-
-## Visual Style (Brawl Stars Inspired)
-
-- **Bold, thick dark outlines** on all UI elements
-- **Vibrant color palette**: bright greens, reds, blues, yellows on dark backgrounds
-- **Rounded, chunky shapes** with subtle 3D/shadow effects
-- **Glowing highlights** on active/selected elements
-- **Chunky, bold fonts** (using a gaming-style font weight)
-- **Semi-transparent dark panels** with colored borders
-- **Animated health/progress bars** with color gradients
-
----
-
-## Responsive Behavior
-
-- **Desktop**: Mouse/keyboard interactions, keyboard shortcuts for hotbar (1-8)
-- **Mobile**: Touch-friendly larger slots, virtual joystick and action buttons appear, swipe gestures for inventory
-- Panels resize and reflow appropriately for smaller screens
-
----
-
-## Demo Features
-
-- Toggle between Roaming and Container views with a button
-- Pre-populated sample items (weapons, ammo, med kits, armor)
-- Health bar can be adjusted via buttons to demo animations
-- Timer counts down in real-time
-- All built with React components and Tailwind CSS, no backend needed
+## Technical Notes
+- The 3D canvas is rendered as a full-screen background layer with `position: absolute; inset: 0`
+- All existing HUD HTML overlays sit on top unchanged
+- Camera uses orthographic projection for that flat, Brawl Stars feel
+- Character is built purely from Three.js primitives (no model files needed)
+- `MeshToonMaterial` gives the cel-shaded cartoon look matching the project's visual style
 
