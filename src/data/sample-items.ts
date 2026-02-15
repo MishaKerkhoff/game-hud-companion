@@ -95,6 +95,7 @@ export const initialEquipment: Record<EquipSlot, InventorySlot> = {
   shield: createSlot('shield_item'),
 };
 
+// 6 slots (3x2)
 export const initialContainerLoot: InventorySlot[] = [
   createSlot('medkit', 2),
   createSlot('ammo_rifle', 45),
@@ -102,8 +103,4 @@ export const initialContainerLoot: InventorySlot[] = [
   createSlot('energy_drink', 3),
   createSlot('grenade', 1),
   createSlot('bandage', 8),
-  createSlot('ammo_shotgun', 20),
-  emptySlot(),
-  emptySlot(),
-  emptySlot(),
 ];
