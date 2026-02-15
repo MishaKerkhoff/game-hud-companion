@@ -49,9 +49,11 @@ export function InventorySlotUI({
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
-    if (!onDrop || dragIndex === undefined) return;
-    const data = JSON.parse(e.dataTransfer.getData('text/plain'));
-    onDrop(data.type, data.index);
+    if (!onDrop) return;
+    try {
+      const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+      onDrop(data.type, data.index);
+    } catch {}
   };
 
   const handleDragOver = (e: React.DragEvent) => {
