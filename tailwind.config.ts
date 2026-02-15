@@ -57,6 +57,10 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        health: "hsl(var(--health))",
+        thirst: "hsl(var(--thirst))",
+        energy: "hsl(var(--energy))",
+        storm: "hsl(var(--storm))",
       },
       borderRadius: {
         lg: "var(--radius)",
