@@ -9,19 +9,20 @@ export function useGameState() {
   const [state, setState] = useState<GameState>({
     health: 75,
     maxHealth: 100,
+    shield: 50,
+    maxShield: 100,
     thirst: 60,
     energy: 80,
     activeHotbarSlot: 0,
     hotbar: initialHotbar,
     backpack: [...initialBackpack],
-    backpackCapacity: 23,
     equipment: { ...initialEquipment },
     containerLoot: [...initialContainerLoot],
     containerName: 'Supply Crate',
     isContainerOpen: false,
-    gameTime: 847, // seconds (14:07)
-    weather: 'Night',
-    stormCountdown: 120,
+    isBagOpen: false,
+    gameTime: 847,
+    mapName: 'Dusty Dunes',
   });
 
   // Game timer
@@ -30,7 +31,6 @@ export function useGameState() {
       setState(prev => ({
         ...prev,
         gameTime: prev.gameTime + 1,
-        stormCountdown: Math.max(0, prev.stormCountdown - 1),
       }));
     }, 1000);
     return () => clearInterval(interval);
@@ -41,13 +41,37 @@ export function useGameState() {
   }, []);
 
   const toggleContainer = useCallback(() => {
-    setState(prev => ({ ...prev, isContainerOpen: !prev.isContainerOpen }));
+    setState(prev => ({
+      ...prev,
+      isContainerOpen: !prev.isContainerOpen,
+      isBagOpen: !prev.isContainerOpen ? true : prev.isBagOpen,
+    }));
+  }, []);
+
+  const toggleBag = useCallback(() => {
+    setState(prev => ({
+      ...prev,
+      isBagOpen: !prev.isBagOpen,
+      // Close container when bag closes
+      isContainerOpen: !prev.isBagOpen ? prev.isContainerOpen : false,
+    }));
+  }, []);
+
+  const closeBag = useCallback(() => {
+    setState(prev => ({ ...prev, isBagOpen: false, isContainerOpen: false }));
   }, []);
 
   const adjustHealth = useCallback((delta: number) => {
     setState(prev => ({
       ...prev,
       health: Math.max(0, Math.min(prev.maxHealth, prev.health + delta)),
+    }));
+  }, []);
+
+  const adjustShield = useCallback((delta: number) => {
+    setState(prev => ({
+      ...prev,
+      shield: Math.max(0, Math.min(prev.maxShield, prev.shield + delta)),
     }));
   }, []);
 
@@ -60,7 +84,7 @@ export function useGameState() {
       if (!slot.item) return prev;
 
       const emptyIdx = bp.findIndex(s => !s.item);
-      if (emptyIdx === -1) return prev; // backpack full
+      if (emptyIdx === -1) return prev;
 
       bp[emptyIdx] = { ...slot };
       loot[lootIndex] = emptySlot();
@@ -85,7 +109,29 @@ export function useGameState() {
     });
   }, []);
 
-  // Equip item from backpack
+  // Swap two slots within backpack
+  const swapBackpackSlots = useCallback((fromIndex: number, toIndex: number) => {
+    setState(prev => {
+      const bp = [...prev.backpack];
+      const temp = bp[fromIndex];
+      bp[fromIndex] = bp[toIndex];
+      bp[toIndex] = temp;
+      return { ...prev, backpack: bp };
+    });
+  }, []);
+
+  // Swap two hotbar slots
+  const swapHotbarSlots = useCallback((fromIndex: number, toIndex: number) => {
+    setState(prev => {
+      const hb = [...prev.hotbar];
+      const temp = hb[fromIndex];
+      hb[fromIndex] = hb[toIndex];
+      hb[toIndex] = temp;
+      return { ...prev, hotbar: hb };
+    });
+  }, []);
+
+  // Equip item from backpack to equipment slot
   const equipItem = useCallback((bpIndex: number) => {
     setState(prev => {
       const bp = [...prev.backpack];
@@ -96,7 +142,6 @@ export function useGameState() {
       const equipSlot = slot.item.equipSlot;
       const current = equip[equipSlot];
 
-      // Swap
       equip[equipSlot] = { ...slot };
       bp[bpIndex] = current.item ? { ...current } : emptySlot();
       return { ...prev, backpack: bp, equipment: equip };
@@ -120,22 +165,60 @@ export function useGameState() {
     });
   }, []);
 
+  // Move from backpack to specific equipment slot via drag
+  const moveToEquipSlot = useCallback((bpIndex: number, equipSlot: EquipSlot) => {
+    setState(prev => {
+      const bp = [...prev.backpack];
+      const equip = { ...prev.equipment };
+      const slot = bp[bpIndex];
+      if (!slot.item) return prev;
+
+      const current = equip[equipSlot];
+      equip[equipSlot] = { ...slot };
+      bp[bpIndex] = current.item ? { ...current } : emptySlot();
+      return { ...prev, backpack: bp, equipment: equip };
+    });
+  }, []);
+
+  // Move from equipment to specific backpack slot via drag
+  const moveToBackpackSlot = useCallback((equipSlot: EquipSlot, bpIndex: number) => {
+    setState(prev => {
+      const bp = [...prev.backpack];
+      const equip = { ...prev.equipment };
+      const equipSlotData = equip[equipSlot];
+      if (!equipSlotData.item) return prev;
+
+      const bpSlotData = bp[bpIndex];
+      bp[bpIndex] = { ...equipSlotData };
+      equip[equipSlot] = bpSlotData.item ? { ...bpSlotData } : emptySlot();
+      return { ...prev, backpack: bp, equipment: equip };
+    });
+  }, []);
+
   const totalWeight = useCallback(() => {
     let w = 0;
     state.backpack.forEach(s => { if (s.item) w += s.item.weight * s.count; });
+    state.hotbar.forEach(s => { if (s.item) w += s.item.weight * s.count; });
     Object.values(state.equipment).forEach(s => { if (s.item) w += s.item.weight * s.count; });
     return Math.round(w * 10) / 10;
-  }, [state.backpack, state.equipment]);
+  }, [state.backpack, state.hotbar, state.equipment]);
 
   return {
     state,
     setActiveSlot,
     toggleContainer,
+    toggleBag,
+    closeBag,
     adjustHealth,
+    adjustShield,
     pickUpItem,
     dropItem,
     equipItem,
     unequipItem,
+    swapBackpackSlots,
+    swapHotbarSlots,
+    moveToEquipSlot,
+    moveToBackpackSlot,
     totalWeight,
   };
 }

@@ -1,11 +1,14 @@
 import { useGameState } from '@/hooks/useGameState';
 import { RoamingHUD } from '@/components/game/RoamingHUD';
 import { ContainerHUD } from '@/components/game/ContainerHUD';
+import { BagHUD } from '@/components/game/BagHUD';
 
 const Index = () => {
   const {
-    state, setActiveSlot, toggleContainer, adjustHealth,
-    pickUpItem, dropItem, equipItem, unequipItem, totalWeight,
+    state, setActiveSlot, toggleContainer, toggleBag, closeBag,
+    adjustHealth, adjustShield, pickUpItem, dropItem, equipItem, unequipItem,
+    swapBackpackSlots, swapHotbarSlots, moveToEquipSlot, moveToBackpackSlot,
+    totalWeight,
   } = useGameState();
 
   return (
@@ -14,7 +17,7 @@ const Index = () => {
         background: 'radial-gradient(ellipse at center, hsl(220 25% 14%), hsl(220 20% 6%))',
       }}
     >
-      {/* Subtle grid pattern for game background */}
+      {/* Subtle grid pattern */}
       <div
         className="absolute inset-0 opacity-[0.04]"
         style={{
@@ -28,19 +31,38 @@ const Index = () => {
         state={state}
         setActiveSlot={setActiveSlot}
         adjustHealth={adjustHealth}
+        adjustShield={adjustShield}
         toggleContainer={toggleContainer}
+        toggleBag={toggleBag}
+        swapHotbarSlots={swapHotbarSlots}
       />
 
-      {/* Container HUD (overlay) */}
+      {/* Bag only (no container) */}
+      {state.isBagOpen && !state.isContainerOpen && (
+        <BagHUD
+          state={state}
+          closeBag={closeBag}
+          equipItem={equipItem}
+          unequipItem={unequipItem}
+          swapBackpackSlots={swapBackpackSlots}
+          moveToEquipSlot={moveToEquipSlot}
+          moveToBackpackSlot={moveToBackpackSlot}
+          totalWeight={totalWeight}
+        />
+      )}
+
+      {/* Container + Bag (both open) */}
       {state.isContainerOpen && (
         <ContainerHUD
           state={state}
-          toggleContainer={toggleContainer}
+          closeBag={closeBag}
           pickUpItem={pickUpItem}
           dropItem={dropItem}
           equipItem={equipItem}
           unequipItem={unequipItem}
-          setActiveSlot={setActiveSlot}
+          swapBackpackSlots={swapBackpackSlots}
+          moveToEquipSlot={moveToEquipSlot}
+          moveToBackpackSlot={moveToBackpackSlot}
           totalWeight={totalWeight}
         />
       )}
