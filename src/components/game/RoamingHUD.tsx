@@ -101,8 +101,8 @@ export function RoamingHUD({
         </div>
       </div>
 
-      {/* Right-side buttons */}
-      <div className="absolute bottom-3 md:bottom-4 right-3 md:right-4 pointer-events-auto flex flex-col gap-1.5">
+      {/* Right-side buttons - vertically centered */}
+      <div className="absolute top-1/2 -translate-y-1/2 right-3 md:right-4 pointer-events-auto flex flex-col gap-1.5 z-[55]">
         <button onClick={toggleBag} className="hud-panel px-3 py-1.5 font-bold text-sm text-foreground hover:border-primary transition-colors">Bag [B]</button>
         <button onClick={toggleContainer} className="hud-panel px-3 py-1.5 font-bold text-sm text-primary hover:border-primary transition-colors">Loot [E]</button>
       </div>
