@@ -1,7 +1,6 @@
 import { GameState, EquipSlot } from '@/types/game';
 import { InventorySlotUI } from './InventorySlotUI';
 import { Weight } from 'lucide-react';
-import { useState } from 'react';
 
 interface ContainerHUDProps {
   state: GameState;
@@ -77,10 +76,34 @@ export function ContainerHUD({
 
   return (
     <div
-      className="absolute inset-0 z-50 flex items-center justify-center gap-3 pointer-events-auto"
+      className="absolute inset-0 z-50 flex items-end justify-between p-4 md:p-8 pb-20 md:pb-24 pointer-events-auto"
       onClick={handleBackdropClick}
     >
-      {/* Bag Panel */}
+      {/* Container Panel - LEFT */}
+      <div className="hud-panel w-[240px] md:w-[280px] p-3 md:p-4 flex flex-col gap-3" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between">
+          <h3 className="font-game text-sm text-primary game-outline">{state.containerName}</h3>
+          <span className="text-xs font-bold text-muted-foreground">
+            {state.containerLoot.filter(s => s.item).length}/{state.containerLoot.length}
+          </span>
+        </div>
+        <div className="grid grid-cols-4 gap-1">
+          {state.containerLoot.map((slot, i) => (
+            <InventorySlotUI
+              key={i}
+              slot={slot}
+              size="md"
+              onClick={() => pickUpItem(i)}
+              dragType="container"
+              dragIndex={i}
+              onDragStart={handleDragStart}
+              onDrop={handleContainerDrop(i)}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Bag Panel - RIGHT */}
       <div className="hud-panel w-[280px] md:w-[320px] p-3 md:p-4 flex flex-col gap-3" onClick={e => e.stopPropagation()}>
         <div className="flex justify-center gap-2">
           {EQUIP_SLOTS.map(({ key, label }) => (
@@ -131,30 +154,6 @@ export function ContainerHUD({
               }}
             />
           </div>
-        </div>
-      </div>
-
-      {/* Container Panel */}
-      <div className="hud-panel w-[240px] md:w-[280px] p-3 md:p-4 flex flex-col gap-3" onClick={e => e.stopPropagation()}>
-        <div className="flex items-center justify-between">
-          <h3 className="font-game text-sm text-primary game-outline">{state.containerName}</h3>
-          <span className="text-xs font-bold text-muted-foreground">
-            {state.containerLoot.filter(s => s.item).length}/{state.containerLoot.length}
-          </span>
-        </div>
-        <div className="grid grid-cols-4 gap-1">
-          {state.containerLoot.map((slot, i) => (
-            <InventorySlotUI
-              key={i}
-              slot={slot}
-              size="md"
-              onClick={() => pickUpItem(i)}
-              dragType="container"
-              dragIndex={i}
-              onDragStart={handleDragStart}
-              onDrop={handleContainerDrop(i)}
-            />
-          ))}
         </div>
       </div>
     </div>

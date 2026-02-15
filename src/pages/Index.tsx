@@ -84,6 +84,9 @@ const Index = () => {
         swapHotbarSlots={swapHotbarSlots}
         moveBackpackToHotbar={moveBackpackToHotbar}
         moveContainerToHotbar={moveContainerToHotbar}
+        moveToEquipSlot={moveToEquipSlot}
+        moveContainerToEquipSlot={moveContainerToEquipSlot}
+        unequipItem={unequipItem}
       />
     </div>
   );

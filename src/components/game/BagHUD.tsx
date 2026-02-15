@@ -62,7 +62,7 @@ export function BagHUD({
 
   return (
     <div
-      className="absolute inset-0 z-50 flex items-center justify-center pointer-events-auto"
+      className="absolute inset-0 z-50 flex items-end justify-end p-4 md:p-8 pb-20 md:pb-24 pointer-events-auto"
       onClick={handleBackdropClick}
     >
       <div className="hud-panel w-[280px] md:w-[320px] p-3 md:p-4 flex flex-col gap-3">

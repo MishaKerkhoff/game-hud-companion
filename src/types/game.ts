@@ -26,7 +26,7 @@ export interface GameState {
   thirst: number;
   energy: number;
   activeHotbarSlot: number;
-  hotbar: InventorySlot[]; // 5 slots: [weapon, item, item, item, item]
+  hotbar: InventorySlot[]; // 4 item slots (weapon is shared from equipment.weapon)
   backpack: InventorySlot[]; // 12 slots (3x4)
   equipment: Record<EquipSlot, InventorySlot>;
   containerLoot: InventorySlot[];
