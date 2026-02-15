@@ -3,7 +3,7 @@ import { GameState } from '@/types/game';
 import { InventorySlotUI } from './InventorySlotUI';
 import { useIsMobile } from '@/hooks/use-mobile';
 import {
-  Clock, Settings, Heart, Droplets, Zap, ChevronUp, ChevronDown,
+  Clock, Settings, Heart, ChevronUp, ChevronDown,
   ChevronLeft, ChevronRight, Swords, Flame, Shield,
 } from 'lucide-react';
 
@@ -28,7 +28,6 @@ export function RoamingHUD({
 }: RoamingHUDProps) {
   const isMobile = useIsMobile();
 
-  // Keyboard shortcuts
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       const num = parseInt(e.key);
@@ -65,6 +64,47 @@ export function RoamingHUD({
         </div>
       </div>
 
+      {/* Top-Center: Health + Shield bars */}
+      <div className="absolute top-3 md:top-5 left-1/2 -translate-x-1/2 pointer-events-auto flex items-center gap-2">
+        {/* Health bar */}
+        <div className="hud-panel px-2 py-2 flex items-center gap-2 w-28 md:w-36">
+          <Heart size={16} className="text-destructive fill-destructive shrink-0" />
+          <div className="flex-1 h-4 rounded-full overflow-hidden" style={{ background: 'hsl(var(--health-bg))' }}>
+            <div
+              className="h-full rounded-full transition-all duration-500 ease-out"
+              style={{
+                width: `${healthPercent}%`,
+                background: 'linear-gradient(90deg, hsl(0 70% 40%), hsl(0 80% 55%))',
+                boxShadow: '0 0 8px hsl(0 80% 55% / 0.5)',
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Shield bar */}
+        <div className="hud-panel px-2 py-2 flex items-center gap-2 w-28 md:w-36">
+          <div className="flex-1 h-4 rounded-full overflow-hidden" style={{ background: 'hsl(210 30% 15%)' }}>
+            <div
+              className="h-full rounded-full transition-all duration-500 ease-out"
+              style={{
+                width: `${shieldPercent}%`,
+                background: 'linear-gradient(90deg, hsl(210 70% 40%), hsl(210 80% 60%))',
+                boxShadow: '0 0 8px hsl(210 80% 55% / 0.5)',
+              }}
+            />
+          </div>
+          <Shield size={16} className="text-secondary fill-secondary/30 shrink-0" />
+        </div>
+
+        {/* Demo buttons */}
+        <div className="flex gap-1">
+          <button onClick={() => adjustHealth(-10)} className="hud-panel px-2 py-1 text-xs font-bold text-destructive hover:border-destructive transition-colors">-HP</button>
+          <button onClick={() => adjustHealth(10)} className="hud-panel px-2 py-1 text-xs font-bold text-accent hover:border-accent transition-colors">+HP</button>
+          <button onClick={() => adjustShield(-10)} className="hud-panel px-2 py-1 text-xs font-bold text-secondary hover:border-secondary transition-colors">-🛡</button>
+          <button onClick={() => adjustShield(10)} className="hud-panel px-2 py-1 text-xs font-bold text-secondary hover:border-secondary transition-colors">+🛡</button>
+        </div>
+      </div>
+
       {/* Top-Right: Settings */}
       <div className="absolute top-3 right-3 md:top-5 md:right-5 pointer-events-auto">
         <button className="hud-panel p-2.5 hover:border-primary transition-colors">
@@ -80,82 +120,6 @@ export function RoamingHUD({
           <div className="absolute left-0 top-1/2 -translate-y-1/2 w-2.5 h-0.5 bg-foreground/70 rounded-full" />
           <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2.5 h-0.5 bg-foreground/70 rounded-full" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-1 rounded-full bg-destructive" />
-        </div>
-      </div>
-
-      {/* Bottom-Left: Health + Shield bars */}
-      <div className="absolute bottom-20 md:bottom-24 left-3 md:left-5 pointer-events-auto flex flex-col gap-2">
-        {/* Health + Shield side by side */}
-        <div className="flex items-center gap-2">
-          {/* Health bar */}
-          <div className="hud-panel px-2 py-2 flex items-center gap-2 w-28 md:w-36">
-            <Heart size={16} className="text-destructive fill-destructive shrink-0" />
-            <div className="flex-1 h-4 rounded-full overflow-hidden" style={{ background: 'hsl(var(--health-bg))' }}>
-              <div
-                className="h-full rounded-full transition-all duration-500 ease-out"
-                style={{
-                  width: `${healthPercent}%`,
-                  background: 'linear-gradient(90deg, hsl(0 70% 40%), hsl(0 80% 55%))',
-                  boxShadow: '0 0 8px hsl(0 80% 55% / 0.5)',
-                }}
-              />
-            </div>
-          </div>
-
-          {/* Shield bar */}
-          <div className="hud-panel px-2 py-2 flex items-center gap-2 w-28 md:w-36">
-            <div className="flex-1 h-4 rounded-full overflow-hidden" style={{ background: 'hsl(210 30% 15%)' }}>
-              <div
-                className="h-full rounded-full transition-all duration-500 ease-out"
-                style={{
-                  width: `${shieldPercent}%`,
-                  background: 'linear-gradient(90deg, hsl(210 70% 40%), hsl(210 80% 60%))',
-                  boxShadow: '0 0 8px hsl(210 80% 55% / 0.5)',
-                }}
-              />
-            </div>
-            <Shield size={16} className="text-secondary fill-secondary/30 shrink-0" />
-          </div>
-        </div>
-
-        {/* Thirst & Energy */}
-        <div className="flex gap-2">
-          <div className="hud-panel p-2 flex items-center gap-1.5">
-            <Droplets size={16} style={{ color: 'hsl(var(--thirst))' }} />
-            <span className="font-black text-xs text-foreground">{state.thirst}%</span>
-          </div>
-          <div className="hud-panel p-2 flex items-center gap-1.5">
-            <Zap size={16} style={{ color: 'hsl(var(--energy))' }} />
-            <span className="font-black text-xs text-foreground">{state.energy}%</span>
-          </div>
-        </div>
-
-        {/* Demo: health/shield buttons */}
-        <div className="flex gap-1">
-          <button
-            onClick={() => adjustHealth(-10)}
-            className="hud-panel px-2 py-1 text-xs font-bold text-destructive hover:border-destructive transition-colors"
-          >
-            -10 HP
-          </button>
-          <button
-            onClick={() => adjustHealth(10)}
-            className="hud-panel px-2 py-1 text-xs font-bold text-accent hover:border-accent transition-colors"
-          >
-            +10 HP
-          </button>
-          <button
-            onClick={() => adjustShield(-10)}
-            className="hud-panel px-2 py-1 text-xs font-bold text-secondary hover:border-secondary transition-colors"
-          >
-            -10 🛡
-          </button>
-          <button
-            onClick={() => adjustShield(10)}
-            className="hud-panel px-2 py-1 text-xs font-bold text-secondary hover:border-secondary transition-colors"
-          >
-            +10 🛡
-          </button>
         </div>
       </div>
 
@@ -183,18 +147,8 @@ export function RoamingHUD({
 
       {/* Right-side buttons */}
       <div className="absolute bottom-3 md:bottom-5 right-3 md:right-5 pointer-events-auto flex flex-col gap-2">
-        <button
-          onClick={toggleBag}
-          className="hud-panel px-3 py-2 font-bold text-sm text-foreground hover:border-primary transition-colors"
-        >
-          Bag [B]
-        </button>
-        <button
-          onClick={toggleContainer}
-          className="hud-panel px-3 py-2 font-bold text-sm text-primary hover:border-primary transition-colors"
-        >
-          Loot [E]
-        </button>
+        <button onClick={toggleBag} className="hud-panel px-3 py-2 font-bold text-sm text-foreground hover:border-primary transition-colors">Bag [B]</button>
+        <button onClick={toggleContainer} className="hud-panel px-3 py-2 font-bold text-sm text-primary hover:border-primary transition-colors">Loot [E]</button>
       </div>
 
       {/* Mobile: Virtual Joystick */}

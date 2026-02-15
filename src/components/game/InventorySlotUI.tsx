@@ -1,7 +1,6 @@
 import { InventorySlot } from '@/types/game';
 import { ItemIcon } from './ItemIcon';
 import { cn } from '@/lib/utils';
-import { useRef } from 'react';
 
 interface InventorySlotUIProps {
   slot: InventorySlot;
@@ -19,9 +18,21 @@ interface InventorySlotUIProps {
 }
 
 const sizes = {
-  sm: 'w-10 h-10 md:w-12 md:h-12',
-  md: 'w-12 h-12 md:w-14 md:h-14',
-  lg: 'w-14 h-14 md:w-16 md:h-16',
+  sm: 'h-10 md:h-12',
+  md: 'h-12 md:h-14',
+  lg: 'h-14 md:h-16',
+};
+
+const widths = {
+  sm: 'w-10 md:w-12',
+  md: 'w-12 md:w-14',
+  lg: 'w-14 md:w-16',
+};
+
+const weaponWidths = {
+  sm: 'w-20 md:w-24',
+  md: 'w-24 md:w-28',
+  lg: 'w-14 md:w-16',
 };
 
 export function InventorySlotUI({
@@ -57,9 +68,9 @@ export function InventorySlotUI({
       className={cn(
         'slot-base relative flex items-center justify-center cursor-pointer select-none',
         sizes[size],
+        isWeaponSlot ? weaponWidths[size] : widths[size],
         isActive && 'slot-active',
         rarity && `rarity-${rarity}`,
-        isWeaponSlot && 'ring-2 ring-destructive/40',
       )}
       title={slot.item?.name || (label ?? 'Empty')}
     >

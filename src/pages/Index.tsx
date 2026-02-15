@@ -8,6 +8,8 @@ const Index = () => {
     state, setActiveSlot, toggleContainer, toggleBag, closeBag,
     adjustHealth, adjustShield, pickUpItem, dropItem, equipItem, unequipItem,
     swapBackpackSlots, swapHotbarSlots, moveToEquipSlot, moveToBackpackSlot,
+    moveContainerToBackpackSlot, moveBackpackToContainerSlot,
+    moveContainerToEquipSlot, moveEquipToContainerSlot,
     totalWeight,
   } = useGameState();
 
@@ -63,6 +65,10 @@ const Index = () => {
           swapBackpackSlots={swapBackpackSlots}
           moveToEquipSlot={moveToEquipSlot}
           moveToBackpackSlot={moveToBackpackSlot}
+          moveContainerToBackpackSlot={moveContainerToBackpackSlot}
+          moveBackpackToContainerSlot={moveBackpackToContainerSlot}
+          moveContainerToEquipSlot={moveContainerToEquipSlot}
+          moveEquipToContainerSlot={moveEquipToContainerSlot}
           totalWeight={totalWeight}
         />
       )}
