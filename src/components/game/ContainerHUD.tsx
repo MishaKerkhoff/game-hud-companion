@@ -80,7 +80,7 @@ export function ContainerHUD({
       onClick={handleBackdropClick}
     >
       {/* Container Panel - LEFT */}
-      <div className="hud-panel w-[240px] md:w-[280px] p-3 md:p-4 flex flex-col gap-3" onClick={e => e.stopPropagation()}>
+      <div className="hud-panel w-[200px] md:w-[220px] p-2.5 md:p-3 flex flex-col gap-2" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between">
           <h3 className="font-game text-sm text-primary game-outline">{state.containerName}</h3>
           <span className="text-xs font-bold text-muted-foreground">
@@ -104,8 +104,8 @@ export function ContainerHUD({
       </div>
 
       {/* Bag Panel - RIGHT */}
-      <div className="hud-panel w-[280px] md:w-[320px] p-3 md:p-4 flex flex-col gap-3" onClick={e => e.stopPropagation()}>
-        <div className="flex justify-center gap-2">
+      <div className="hud-panel w-[260px] md:w-[290px] p-2.5 md:p-3 flex flex-col gap-2" onClick={e => e.stopPropagation()}>
+        <div className="flex justify-center gap-1.5">
           {EQUIP_SLOTS.map(({ key, label }) => (
             <InventorySlotUI
               key={key}

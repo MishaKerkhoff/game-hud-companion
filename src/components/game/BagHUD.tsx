@@ -65,9 +65,9 @@ export function BagHUD({
       className="absolute inset-0 z-50 flex items-center justify-end p-4 md:p-8 pointer-events-auto"
       onClick={handleBackdropClick}
     >
-      <div className="hud-panel w-[280px] md:w-[320px] p-3 md:p-4 flex flex-col gap-3">
+      <div className="hud-panel w-[260px] md:w-[290px] p-2.5 md:p-3 flex flex-col gap-2">
         {/* Equipment Row: Weapon, Bag, Shield */}
-        <div className="flex justify-center gap-2">
+        <div className="flex justify-center gap-1.5">
           {EQUIP_SLOTS.map(({ key, label }) => (
             <InventorySlotUI
               key={key}

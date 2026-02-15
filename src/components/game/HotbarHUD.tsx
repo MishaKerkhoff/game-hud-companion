@@ -40,8 +40,8 @@ export function HotbarHUD({
   };
 
   return (
-    <div className="absolute bottom-3 md:bottom-5 left-1/2 -translate-x-1/2 z-[60] pointer-events-auto">
-      <div className="hud-panel px-2 py-2 flex gap-1 md:gap-1.5">
+    <div className="absolute bottom-3 md:bottom-4 left-1/2 -translate-x-1/2 z-[60] pointer-events-auto">
+      <div className="hud-panel px-2 py-1.5 flex gap-1 md:gap-1">
         {/* Weapon slot (shared with equipment.weapon) */}
         <InventorySlotUI
           slot={state.equipment.weapon}
