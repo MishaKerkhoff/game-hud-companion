@@ -76,7 +76,7 @@ export function ContainerHUD({
 
   return (
     <div
-      className="absolute inset-0 z-50 flex items-end justify-between p-4 md:p-8 pb-20 md:pb-24 pointer-events-auto"
+      className="absolute inset-0 z-50 flex items-center justify-between p-4 md:p-8 pointer-events-auto"
       onClick={handleBackdropClick}
     >
       {/* Container Panel - LEFT */}
@@ -87,7 +87,7 @@ export function ContainerHUD({
             {state.containerLoot.filter(s => s.item).length}/{state.containerLoot.length}
           </span>
         </div>
-        <div className="grid grid-cols-4 gap-1">
+        <div className="grid grid-cols-3 gap-1">
           {state.containerLoot.map((slot, i) => (
             <InventorySlotUI
               key={i}
