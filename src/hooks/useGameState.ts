@@ -255,6 +255,62 @@ export function useGameState() {
     });
   }, []);
 
+  // Move from backpack to hotbar slot
+  const moveBackpackToHotbar = useCallback((bpIndex: number, hotbarIndex: number) => {
+    setState(prev => {
+      const bp = [...prev.backpack];
+      const hb = [...prev.hotbar];
+      const bpSlot = bp[bpIndex];
+      if (!bpSlot.item) return prev;
+      const hbSlot = hb[hotbarIndex];
+      hb[hotbarIndex] = { ...bpSlot };
+      bp[bpIndex] = hbSlot.item ? { ...hbSlot } : emptySlot();
+      return { ...prev, backpack: bp, hotbar: hb };
+    });
+  }, []);
+
+  // Move from container to hotbar slot
+  const moveContainerToHotbar = useCallback((containerIndex: number, hotbarIndex: number) => {
+    setState(prev => {
+      const loot = [...prev.containerLoot];
+      const hb = [...prev.hotbar];
+      const lootSlot = loot[containerIndex];
+      if (!lootSlot.item) return prev;
+      const hbSlot = hb[hotbarIndex];
+      hb[hotbarIndex] = { ...lootSlot };
+      loot[containerIndex] = hbSlot.item ? { ...hbSlot } : emptySlot();
+      return { ...prev, containerLoot: loot, hotbar: hb };
+    });
+  }, []);
+
+  // Move from hotbar to backpack slot
+  const moveHotbarToBackpack = useCallback((hotbarIndex: number, bpIndex: number) => {
+    setState(prev => {
+      const hb = [...prev.hotbar];
+      const bp = [...prev.backpack];
+      const hbSlot = hb[hotbarIndex];
+      if (!hbSlot.item) return prev;
+      const bpSlot = bp[bpIndex];
+      bp[bpIndex] = { ...hbSlot };
+      hb[hotbarIndex] = bpSlot.item ? { ...bpSlot } : emptySlot();
+      return { ...prev, hotbar: hb, backpack: bp };
+    });
+  }, []);
+
+  // Move from hotbar to container slot
+  const moveHotbarToContainer = useCallback((hotbarIndex: number, containerIndex: number) => {
+    setState(prev => {
+      const hb = [...prev.hotbar];
+      const loot = [...prev.containerLoot];
+      const hbSlot = hb[hotbarIndex];
+      if (!hbSlot.item) return prev;
+      const lootSlot = loot[containerIndex];
+      loot[containerIndex] = { ...hbSlot };
+      hb[hotbarIndex] = lootSlot.item ? { ...lootSlot } : emptySlot();
+      return { ...prev, hotbar: hb, containerLoot: loot };
+    });
+  }, []);
+
   const totalWeight = useCallback(() => {
     let w = 0;
     state.backpack.forEach(s => { if (s.item) w += s.item.weight * s.count; });
@@ -283,6 +339,10 @@ export function useGameState() {
     moveBackpackToContainerSlot,
     moveContainerToEquipSlot,
     moveEquipToContainerSlot,
+    moveBackpackToHotbar,
+    moveContainerToHotbar,
+    moveHotbarToBackpack,
+    moveHotbarToContainer,
     totalWeight,
   };
 }

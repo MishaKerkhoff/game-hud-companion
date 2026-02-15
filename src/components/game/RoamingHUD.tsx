@@ -15,6 +15,8 @@ interface RoamingHUDProps {
   toggleContainer: () => void;
   toggleBag: () => void;
   swapHotbarSlots: (from: number, to: number) => void;
+  moveBackpackToHotbar: (bpIndex: number, hotbarIndex: number) => void;
+  moveContainerToHotbar: (containerIndex: number, hotbarIndex: number) => void;
 }
 
 function formatTime(seconds: number) {
@@ -24,7 +26,8 @@ function formatTime(seconds: number) {
 }
 
 export function RoamingHUD({
-  state, setActiveSlot, adjustHealth, adjustShield, toggleContainer, toggleBag, swapHotbarSlots,
+  state, setActiveSlot, adjustHealth, adjustShield, toggleContainer, toggleBag,
+  swapHotbarSlots, moveBackpackToHotbar, moveContainerToHotbar,
 }: RoamingHUDProps) {
   const isMobile = useIsMobile();
 
@@ -46,6 +49,10 @@ export function RoamingHUD({
   const handleHotbarDrop = (targetIndex: number) => (sourceType: string, sourceIndex: number | string) => {
     if (sourceType === 'hotbar') {
       swapHotbarSlots(sourceIndex as number, targetIndex);
+    } else if (sourceType === 'backpack') {
+      moveBackpackToHotbar(sourceIndex as number, targetIndex);
+    } else if (sourceType === 'container') {
+      moveContainerToHotbar(sourceIndex as number, targetIndex);
     }
   };
 

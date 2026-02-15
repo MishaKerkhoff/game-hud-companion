@@ -10,6 +10,7 @@ const Index = () => {
     swapBackpackSlots, swapHotbarSlots, moveToEquipSlot, moveToBackpackSlot,
     moveContainerToBackpackSlot, moveBackpackToContainerSlot,
     moveContainerToEquipSlot, moveEquipToContainerSlot,
+    moveBackpackToHotbar, moveContainerToHotbar, moveHotbarToBackpack, moveHotbarToContainer,
     totalWeight,
   } = useGameState();
 
@@ -37,6 +38,8 @@ const Index = () => {
         toggleContainer={toggleContainer}
         toggleBag={toggleBag}
         swapHotbarSlots={swapHotbarSlots}
+        moveBackpackToHotbar={moveBackpackToHotbar}
+        moveContainerToHotbar={moveContainerToHotbar}
       />
 
       {/* Bag only (no container) */}
@@ -49,6 +52,7 @@ const Index = () => {
           swapBackpackSlots={swapBackpackSlots}
           moveToEquipSlot={moveToEquipSlot}
           moveToBackpackSlot={moveToBackpackSlot}
+          moveHotbarToBackpack={moveHotbarToBackpack}
           totalWeight={totalWeight}
         />
       )}
@@ -69,6 +73,8 @@ const Index = () => {
           moveBackpackToContainerSlot={moveBackpackToContainerSlot}
           moveContainerToEquipSlot={moveContainerToEquipSlot}
           moveEquipToContainerSlot={moveEquipToContainerSlot}
+          moveHotbarToBackpack={moveHotbarToBackpack}
+          moveHotbarToContainer={moveHotbarToContainer}
           totalWeight={totalWeight}
         />
       )}
