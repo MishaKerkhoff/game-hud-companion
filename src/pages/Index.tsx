@@ -7,7 +7,7 @@ import { HotbarHUD } from '@/components/game/HotbarHUD';
 const Index = () => {
   const {
     state, setActiveSlot, toggleContainer, toggleBag, closeBag,
-    adjustHealth, adjustShield, pickUpItem, dropItem, equipItem, unequipItem,
+    pickUpItem, dropItem, equipItem, unequipItem,
     swapBackpackSlots, swapHotbarSlots, moveToEquipSlot, moveToBackpackSlot,
     moveContainerToBackpackSlot, moveBackpackToContainerSlot,
     moveContainerToEquipSlot, moveEquipToContainerSlot,
@@ -34,8 +34,6 @@ const Index = () => {
       <RoamingHUD
         state={state}
         setActiveSlot={setActiveSlot}
-        adjustHealth={adjustHealth}
-        adjustShield={adjustShield}
         toggleContainer={toggleContainer}
         toggleBag={toggleBag}
       />

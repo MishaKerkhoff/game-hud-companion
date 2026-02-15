@@ -9,8 +9,6 @@ import {
 interface RoamingHUDProps {
   state: GameState;
   setActiveSlot: (slot: number) => void;
-  adjustHealth: (delta: number) => void;
-  adjustShield: (delta: number) => void;
   toggleContainer: () => void;
   toggleBag: () => void;
 }
@@ -22,7 +20,7 @@ function formatTime(seconds: number) {
 }
 
 export function RoamingHUD({
-  state, setActiveSlot, adjustHealth, adjustShield, toggleContainer, toggleBag,
+  state, setActiveSlot, toggleContainer, toggleBag,
 }: RoamingHUDProps) {
   const isMobile = useIsMobile();
 
@@ -40,30 +38,26 @@ export function RoamingHUD({
   const healthPercent = (state.health / state.maxHealth) * 100;
   const shieldPercent = (state.shield / state.maxShield) * 100;
 
-
-
-
   return (
     <div className="absolute inset-0 pointer-events-none">
       {/* Top-Left: Map Name + Timer */}
-      <div className="absolute top-3 left-3 md:top-5 md:left-5 pointer-events-auto flex flex-col gap-1">
-        <div className="hud-panel px-3 py-1.5">
+      <div className="absolute top-3 left-3 md:top-4 md:left-4 pointer-events-auto flex flex-col gap-1">
+        <div className="hud-panel px-3 py-1">
           <span className="font-game text-xs text-muted-foreground game-outline">{state.mapName}</span>
         </div>
-        <div className="hud-panel px-3 py-2 flex items-center gap-2">
-          <Clock size={18} className="text-primary" />
-          <span className="font-game text-lg text-primary game-outline">
+        <div className="hud-panel px-3 py-1.5 flex items-center gap-2">
+          <Clock size={16} className="text-primary" />
+          <span className="font-game text-base text-primary game-outline">
             {formatTime(state.gameTime)}
           </span>
         </div>
       </div>
 
       {/* Top-Center: Health + Shield bars */}
-      <div className="absolute top-3 md:top-5 left-1/2 -translate-x-1/2 pointer-events-auto flex items-center gap-2">
-        {/* Health bar */}
-        <div className="hud-panel px-2 py-2 flex items-center gap-2 w-28 md:w-36">
-          <Heart size={16} className="text-destructive fill-destructive shrink-0" />
-          <div className="flex-1 h-4 rounded-full overflow-hidden" style={{ background: 'hsl(var(--health-bg))' }}>
+      <div className="absolute top-3 md:top-4 left-1/2 -translate-x-1/2 pointer-events-auto flex items-center gap-1.5">
+        <div className="hud-panel px-2 py-1.5 flex items-center gap-2 w-28 md:w-36">
+          <Heart size={14} className="text-destructive fill-destructive shrink-0" />
+          <div className="flex-1 h-3 rounded-full overflow-hidden" style={{ background: 'hsl(var(--health-bg))' }}>
             <div
               className="h-full rounded-full transition-all duration-500 ease-out"
               style={{
@@ -74,10 +68,8 @@ export function RoamingHUD({
             />
           </div>
         </div>
-
-        {/* Shield bar */}
-        <div className="hud-panel px-2 py-2 flex items-center gap-2 w-28 md:w-36">
-          <div className="flex-1 h-4 rounded-full overflow-hidden" style={{ background: 'hsl(210 30% 15%)' }}>
+        <div className="hud-panel px-2 py-1.5 flex items-center gap-2 w-28 md:w-36">
+          <div className="flex-1 h-3 rounded-full overflow-hidden" style={{ background: 'hsl(210 30% 15%)' }}>
             <div
               className="h-full rounded-full transition-all duration-500 ease-out"
               style={{
@@ -87,22 +79,14 @@ export function RoamingHUD({
               }}
             />
           </div>
-          <Shield size={16} className="text-secondary fill-secondary/30 shrink-0" />
-        </div>
-
-        {/* Demo buttons */}
-        <div className="flex gap-1">
-          <button onClick={() => adjustHealth(-10)} className="hud-panel px-2 py-1 text-xs font-bold text-destructive hover:border-destructive transition-colors">-HP</button>
-          <button onClick={() => adjustHealth(10)} className="hud-panel px-2 py-1 text-xs font-bold text-accent hover:border-accent transition-colors">+HP</button>
-          <button onClick={() => adjustShield(-10)} className="hud-panel px-2 py-1 text-xs font-bold text-secondary hover:border-secondary transition-colors">-🛡</button>
-          <button onClick={() => adjustShield(10)} className="hud-panel px-2 py-1 text-xs font-bold text-secondary hover:border-secondary transition-colors">+🛡</button>
+          <Shield size={14} className="text-secondary fill-secondary/30 shrink-0" />
         </div>
       </div>
 
       {/* Top-Right: Settings */}
-      <div className="absolute top-3 right-3 md:top-5 md:right-5 pointer-events-auto">
-        <button className="hud-panel p-2.5 hover:border-primary transition-colors">
-          <Settings size={22} className="text-foreground" />
+      <div className="absolute top-3 right-3 md:top-4 md:right-4 pointer-events-auto">
+        <button className="hud-panel p-2 hover:border-primary transition-colors">
+          <Settings size={20} className="text-foreground" />
         </button>
       </div>
 
@@ -118,9 +102,9 @@ export function RoamingHUD({
       </div>
 
       {/* Right-side buttons */}
-      <div className="absolute bottom-3 md:bottom-5 right-3 md:right-5 pointer-events-auto flex flex-col gap-2">
-        <button onClick={toggleBag} className="hud-panel px-3 py-2 font-bold text-sm text-foreground hover:border-primary transition-colors">Bag [B]</button>
-        <button onClick={toggleContainer} className="hud-panel px-3 py-2 font-bold text-sm text-primary hover:border-primary transition-colors">Loot [E]</button>
+      <div className="absolute bottom-3 md:bottom-4 right-3 md:right-4 pointer-events-auto flex flex-col gap-1.5">
+        <button onClick={toggleBag} className="hud-panel px-3 py-1.5 font-bold text-sm text-foreground hover:border-primary transition-colors">Bag [B]</button>
+        <button onClick={toggleContainer} className="hud-panel px-3 py-1.5 font-bold text-sm text-primary hover:border-primary transition-colors">Loot [E]</button>
       </div>
 
       {/* Mobile: Virtual Joystick */}
