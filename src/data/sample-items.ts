@@ -65,9 +65,8 @@ export const createSlot = (itemId: string, count: number = 1): InventorySlot => 
   count,
 });
 
-// 5 slots: weapon slot + 4 item slots
+// 4 item slots (weapon displayed from equipment.weapon)
 export const initialHotbar: InventorySlot[] = [
-  createSlot('assault_rifle'),
   createSlot('medkit', 3),
   createSlot('bandage', 5),
   createSlot('grenade', 2),
