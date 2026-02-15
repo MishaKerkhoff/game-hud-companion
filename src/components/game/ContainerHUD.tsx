@@ -1,9 +1,7 @@
-import { GameState, EquipSlot, InventorySlot } from '@/types/game';
+import { GameState, EquipSlot } from '@/types/game';
 import { InventorySlotUI } from './InventorySlotUI';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { Weight } from 'lucide-react';
 import { useState } from 'react';
-import { cn } from '@/lib/utils';
 
 interface ContainerHUDProps {
   state: GameState;
@@ -15,6 +13,10 @@ interface ContainerHUDProps {
   swapBackpackSlots: (from: number, to: number) => void;
   moveToEquipSlot: (bpIndex: number, equipSlot: EquipSlot) => void;
   moveToBackpackSlot: (equipSlot: EquipSlot, bpIndex: number) => void;
+  moveContainerToBackpackSlot: (containerIndex: number, bpIndex: number) => void;
+  moveBackpackToContainerSlot: (bpIndex: number, containerIndex: number) => void;
+  moveContainerToEquipSlot: (containerIndex: number, equipSlot: EquipSlot) => void;
+  moveEquipToContainerSlot: (equipSlot: EquipSlot, containerIndex: number) => void;
   totalWeight: () => number;
 }
 
@@ -26,16 +28,13 @@ const EQUIP_SLOTS: { key: EquipSlot; label: string }[] = [
 
 export function ContainerHUD({
   state, closeBag, pickUpItem, dropItem, equipItem, unequipItem,
-  swapBackpackSlots, moveToEquipSlot, moveToBackpackSlot, totalWeight,
+  swapBackpackSlots, moveToEquipSlot, moveToBackpackSlot,
+  moveContainerToBackpackSlot, moveBackpackToContainerSlot,
+  moveContainerToEquipSlot, moveEquipToContainerSlot,
+  totalWeight,
 }: ContainerHUDProps) {
-  const isMobile = useIsMobile();
   const weight = totalWeight();
   const maxWeight = 49;
-  const [dragSource, setDragSource] = useState<{ type: string; index: number | string } | null>(null);
-
-  const handleDragStart = (type: string, index: number | string) => {
-    setDragSource({ type, index });
-  };
 
   const handleBackpackDrop = (bpIndex: number) => (sourceType: string, sourceIndex: number | string) => {
     if (sourceType === 'backpack') {
@@ -43,24 +42,31 @@ export function ContainerHUD({
     } else if (sourceType === 'equip') {
       moveToBackpackSlot(sourceIndex as EquipSlot, bpIndex);
     } else if (sourceType === 'container') {
-      // Pick up from container to this specific backpack slot
-      pickUpItem(sourceIndex as number);
+      moveContainerToBackpackSlot(sourceIndex as number, bpIndex);
     }
-    setDragSource(null);
   };
 
   const handleEquipDrop = (equipSlot: EquipSlot) => (sourceType: string, sourceIndex: number | string) => {
     if (sourceType === 'backpack') {
       moveToEquipSlot(sourceIndex as number, equipSlot);
+    } else if (sourceType === 'container') {
+      moveContainerToEquipSlot(sourceIndex as number, equipSlot);
     }
-    setDragSource(null);
+  };
+
+  const handleContainerDrop = (containerIndex: number) => (sourceType: string, sourceIndex: number | string) => {
+    if (sourceType === 'backpack') {
+      moveBackpackToContainerSlot(sourceIndex as number, containerIndex);
+    } else if (sourceType === 'equip') {
+      moveEquipToContainerSlot(sourceIndex as EquipSlot, containerIndex);
+    }
   };
 
   const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      closeBag();
-    }
+    if (e.target === e.currentTarget) closeBag();
   };
+
+  const handleDragStart = (type: string, index: number | string) => {};
 
   return (
     <div
@@ -69,7 +75,6 @@ export function ContainerHUD({
     >
       {/* Bag Panel */}
       <div className="hud-panel w-[280px] md:w-[320px] p-3 md:p-4 flex flex-col gap-3" onClick={e => e.stopPropagation()}>
-        {/* Equipment Row */}
         <div className="flex justify-center gap-2">
           {EQUIP_SLOTS.map(({ key, label }) => (
             <InventorySlotUI
@@ -86,7 +91,6 @@ export function ContainerHUD({
           ))}
         </div>
 
-        {/* Backpack Grid 3x4 */}
         <div className="grid grid-cols-4 gap-1">
           {state.backpack.map((slot, i) => (
             <InventorySlotUI
@@ -105,7 +109,6 @@ export function ContainerHUD({
           ))}
         </div>
 
-        {/* Weight Bar */}
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1 text-xs font-bold text-muted-foreground shrink-0">
             <Weight size={14} />
@@ -142,7 +145,7 @@ export function ContainerHUD({
               dragType="container"
               dragIndex={i}
               onDragStart={handleDragStart}
-              onDrop={() => {}}
+              onDrop={handleContainerDrop(i)}
             />
           ))}
         </div>

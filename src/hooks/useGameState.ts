@@ -195,6 +195,66 @@ export function useGameState() {
     });
   }, []);
 
+  // Move from container to specific backpack slot via drag
+  const moveContainerToBackpackSlot = useCallback((containerIndex: number, bpIndex: number) => {
+    setState(prev => {
+      const loot = [...prev.containerLoot];
+      const bp = [...prev.backpack];
+      const lootSlot = loot[containerIndex];
+      if (!lootSlot.item) return prev;
+
+      const bpSlot = bp[bpIndex];
+      bp[bpIndex] = { ...lootSlot };
+      loot[containerIndex] = bpSlot.item ? { ...bpSlot } : emptySlot();
+      return { ...prev, containerLoot: loot, backpack: bp };
+    });
+  }, []);
+
+  // Move from backpack to specific container slot via drag
+  const moveBackpackToContainerSlot = useCallback((bpIndex: number, containerIndex: number) => {
+    setState(prev => {
+      const bp = [...prev.backpack];
+      const loot = [...prev.containerLoot];
+      const bpSlot = bp[bpIndex];
+      if (!bpSlot.item) return prev;
+
+      const lootSlot = loot[containerIndex];
+      loot[containerIndex] = { ...bpSlot };
+      bp[bpIndex] = lootSlot.item ? { ...lootSlot } : emptySlot();
+      return { ...prev, backpack: bp, containerLoot: loot };
+    });
+  }, []);
+
+  // Move from container to equipment slot via drag
+  const moveContainerToEquipSlot = useCallback((containerIndex: number, equipSlot: EquipSlot) => {
+    setState(prev => {
+      const loot = [...prev.containerLoot];
+      const equip = { ...prev.equipment };
+      const lootSlot = loot[containerIndex];
+      if (!lootSlot.item) return prev;
+
+      const current = equip[equipSlot];
+      equip[equipSlot] = { ...lootSlot };
+      loot[containerIndex] = current.item ? { ...current } : emptySlot();
+      return { ...prev, containerLoot: loot, equipment: equip };
+    });
+  }, []);
+
+  // Move from equipment to container slot via drag
+  const moveEquipToContainerSlot = useCallback((equipSlot: EquipSlot, containerIndex: number) => {
+    setState(prev => {
+      const loot = [...prev.containerLoot];
+      const equip = { ...prev.equipment };
+      const equipSlotData = equip[equipSlot];
+      if (!equipSlotData.item) return prev;
+
+      const lootSlot = loot[containerIndex];
+      loot[containerIndex] = { ...equipSlotData };
+      equip[equipSlot] = lootSlot.item ? { ...lootSlot } : emptySlot();
+      return { ...prev, containerLoot: loot, equipment: equip };
+    });
+  }, []);
+
   const totalWeight = useCallback(() => {
     let w = 0;
     state.backpack.forEach(s => { if (s.item) w += s.item.weight * s.count; });
@@ -219,6 +279,10 @@ export function useGameState() {
     swapHotbarSlots,
     moveToEquipSlot,
     moveToBackpackSlot,
+    moveContainerToBackpackSlot,
+    moveBackpackToContainerSlot,
+    moveContainerToEquipSlot,
+    moveEquipToContainerSlot,
     totalWeight,
   };
 }
