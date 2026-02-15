@@ -1,4 +1,6 @@
+import { useState, useCallback } from 'react';
 import { useGameState } from '@/hooks/useGameState';
+import { GameScene } from '@/components/game/GameScene';
 import { RoamingHUD } from '@/components/game/RoamingHUD';
 import { ContainerHUD } from '@/components/game/ContainerHUD';
 import { BagHUD } from '@/components/game/BagHUD';
@@ -15,31 +17,29 @@ const Index = () => {
     totalWeight,
   } = useGameState();
 
-  return (
-    <div className="relative w-screen h-screen overflow-hidden select-none"
-      style={{
-        background: 'radial-gradient(ellipse at center, hsl(220 25% 14%), hsl(220 20% 6%))',
-      }}
-    >
-      {/* Subtle grid pattern */}
-      <div
-        className="absolute inset-0 opacity-[0.04]"
-        style={{
-          backgroundImage: 'linear-gradient(hsl(0 0% 100%) 1px, transparent 1px), linear-gradient(90deg, hsl(0 0% 100%) 1px, transparent 1px)',
-          backgroundSize: '40px 40px',
-        }}
-      />
+  const [joystickVector, setJoystickVector] = useState<{ x: number; z: number }>({ x: 0, z: 0 });
 
-      {/* Roaming HUD (always visible) */}
+  const handleJoystickMove = useCallback((x: number, z: number) => {
+    setJoystickVector({ x, z });
+  }, []);
+
+  const isPaused = state.isBagOpen || state.isContainerOpen;
+
+  return (
+    <div className="relative w-screen h-screen overflow-hidden select-none">
+      {/* 3D Scene background */}
+      <GameScene isPaused={isPaused} joystickVector={joystickVector} />
+
+      {/* HUD overlays */}
       <RoamingHUD
         state={state}
         setActiveSlot={setActiveSlot}
         toggleContainer={toggleContainer}
         toggleBag={toggleBag}
         isOverlayOpen={state.isBagOpen || state.isContainerOpen}
+        onJoystickMove={handleJoystickMove}
       />
 
-      {/* Bag only (no container) */}
       {state.isBagOpen && !state.isContainerOpen && (
         <BagHUD
           state={state}
@@ -54,7 +54,6 @@ const Index = () => {
         />
       )}
 
-      {/* Container + Bag (both open) */}
       {state.isContainerOpen && (
         <ContainerHUD
           state={state}
@@ -76,7 +75,6 @@ const Index = () => {
         />
       )}
 
-      {/* Hotbar always on top so drag-and-drop works across overlays */}
       <HotbarHUD
         state={state}
         setActiveSlot={setActiveSlot}
