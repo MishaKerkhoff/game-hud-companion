@@ -12,6 +12,7 @@ interface RoamingHUDProps {
   toggleContainer: () => void;
   toggleBag: () => void;
   isOverlayOpen: boolean;
+  onJoystickMove?: (x: number, z: number) => void;
 }
 
 function formatTime(seconds: number) {
@@ -21,7 +22,7 @@ function formatTime(seconds: number) {
 }
 
 export function RoamingHUD({
-  state, setActiveSlot, toggleContainer, toggleBag, isOverlayOpen,
+  state, setActiveSlot, toggleContainer, toggleBag, isOverlayOpen, onJoystickMove,
 }: RoamingHUDProps) {
   const isMobile = useIsMobile();
 
@@ -117,10 +118,22 @@ export function RoamingHUD({
         <div className="absolute bottom-24 left-5 pointer-events-auto">
           <div className="hud-panel w-28 h-28 flex items-center justify-center relative">
             <div className="w-12 h-12 rounded-full bg-muted/50 border-2 border-muted-foreground/30" />
-            <button className="absolute top-1 left-1/2 -translate-x-1/2 p-1"><ChevronUp size={20} className="text-foreground" /></button>
-            <button className="absolute bottom-1 left-1/2 -translate-x-1/2 p-1"><ChevronDown size={20} className="text-foreground" /></button>
-            <button className="absolute left-1 top-1/2 -translate-y-1/2 p-1"><ChevronLeft size={20} className="text-foreground" /></button>
-            <button className="absolute right-1 top-1/2 -translate-y-1/2 p-1"><ChevronRight size={20} className="text-foreground" /></button>
+            <button className="absolute top-1 left-1/2 -translate-x-1/2 p-1"
+              onPointerDown={() => onJoystickMove?.(0, -1)} onPointerUp={() => onJoystickMove?.(0, 0)} onPointerLeave={() => onJoystickMove?.(0, 0)}>
+              <ChevronUp size={20} className="text-foreground" />
+            </button>
+            <button className="absolute bottom-1 left-1/2 -translate-x-1/2 p-1"
+              onPointerDown={() => onJoystickMove?.(0, 1)} onPointerUp={() => onJoystickMove?.(0, 0)} onPointerLeave={() => onJoystickMove?.(0, 0)}>
+              <ChevronDown size={20} className="text-foreground" />
+            </button>
+            <button className="absolute left-1 top-1/2 -translate-y-1/2 p-1"
+              onPointerDown={() => onJoystickMove?.(-1, 0)} onPointerUp={() => onJoystickMove?.(0, 0)} onPointerLeave={() => onJoystickMove?.(0, 0)}>
+              <ChevronLeft size={20} className="text-foreground" />
+            </button>
+            <button className="absolute right-1 top-1/2 -translate-y-1/2 p-1"
+              onPointerDown={() => onJoystickMove?.(1, 0)} onPointerUp={() => onJoystickMove?.(0, 0)} onPointerLeave={() => onJoystickMove?.(0, 0)}>
+              <ChevronRight size={20} className="text-foreground" />
+            </button>
           </div>
         </div>
       )}
