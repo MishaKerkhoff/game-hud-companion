@@ -36,6 +36,7 @@ const Index = () => {
         setActiveSlot={setActiveSlot}
         toggleContainer={toggleContainer}
         toggleBag={toggleBag}
+        isOverlayOpen={state.isBagOpen || state.isContainerOpen}
       />
 
       {/* Bag only (no container) */}

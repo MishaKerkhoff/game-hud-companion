@@ -3,7 +3,7 @@ import { GameState } from '@/types/game';
 import { useIsMobile } from '@/hooks/use-mobile';
 import {
   Clock, Settings, Heart, ChevronUp, ChevronDown,
-  ChevronLeft, ChevronRight, Swords, Flame, Shield,
+  ChevronLeft, ChevronRight, Swords, Flame, Shield, Backpack,
 } from 'lucide-react';
 
 interface RoamingHUDProps {
@@ -11,6 +11,7 @@ interface RoamingHUDProps {
   setActiveSlot: (slot: number) => void;
   toggleContainer: () => void;
   toggleBag: () => void;
+  isOverlayOpen: boolean;
 }
 
 function formatTime(seconds: number) {
@@ -20,7 +21,7 @@ function formatTime(seconds: number) {
 }
 
 export function RoamingHUD({
-  state, setActiveSlot, toggleContainer, toggleBag,
+  state, setActiveSlot, toggleContainer, toggleBag, isOverlayOpen,
 }: RoamingHUDProps) {
   const isMobile = useIsMobile();
 
@@ -101,11 +102,15 @@ export function RoamingHUD({
         </div>
       </div>
 
-      {/* Right-side buttons - vertically centered */}
-      <div className="absolute top-1/2 -translate-y-1/2 right-3 md:right-4 pointer-events-auto flex flex-col gap-1.5 z-[55]">
-        <button onClick={toggleBag} className="hud-panel px-3 py-1.5 font-bold text-sm text-foreground hover:border-primary transition-colors">Bag [B]</button>
-        <button onClick={toggleContainer} className="hud-panel px-3 py-1.5 font-bold text-sm text-primary hover:border-primary transition-colors">Loot [E]</button>
-      </div>
+      {/* Right-side buttons - vertically centered, hidden when overlay open */}
+      {!isOverlayOpen && (
+        <div className="absolute top-1/2 -translate-y-1/2 right-3 md:right-4 pointer-events-auto flex flex-col gap-1.5 z-[55]">
+          <button onClick={toggleBag} className="hud-panel p-2 hover:border-primary transition-colors">
+            <Backpack size={20} className="text-primary" />
+          </button>
+          <button onClick={toggleContainer} className="hud-panel px-3 py-1.5 font-bold text-sm text-primary hover:border-primary transition-colors">Loot [E]</button>
+        </div>
+      )}
 
       {/* Mobile: Virtual Joystick */}
       {isMobile && (
