@@ -78,7 +78,7 @@ export default function MenuLayout() {
         </div>
 
         {/* Page content */}
-        <div className="flex-1 overflow-auto px-2 md:px-4 pb-4">
+        <div className="flex-1 overflow-auto px-2 md:px-4 pb-4 flex items-center">
           <Outlet />
         </div>
       </div>
