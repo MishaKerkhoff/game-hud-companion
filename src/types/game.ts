@@ -14,6 +14,7 @@ export interface GameItem {
   description?: string;
   stats?: Record<string, string | number>;
   sellValue?: number;
+  scrapResult?: { itemId: string; count: number }[];
 }
 
 export interface InventorySlot {

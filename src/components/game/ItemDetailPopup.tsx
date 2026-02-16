@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { InventorySlot } from '@/types/game';
 import { ItemIcon } from './ItemIcon';
-import { X, Weight, ArrowRightLeft, Coins, Recycle } from 'lucide-react';
+import { ITEMS } from '@/data/sample-items';
+import { X, Weight, ArrowRightLeft, Coins, Recycle, AlertTriangle, Check } from 'lucide-react';
 
 export type ItemSource = {
   type: 'stash' | 'backpack' | 'hotbar' | 'equip';
@@ -24,31 +26,34 @@ const rarityLabel: Record<string, string> = {
   legendary: 'LEGENDARY',
 };
 
+type ConfirmMode = null | 'sell' | 'scrap';
+
 export function ItemDetailPopup({ slot, source, onClose, onEquip, onSell, onRecycle }: ItemDetailPopupProps) {
+  const [confirmMode, setConfirmMode] = useState<ConfirmMode>(null);
   const item = slot.item;
   if (!item) return null;
 
   const stats = item.stats ? Object.entries(item.stats) : [];
   const isEquipped = source.type === 'equip' || source.type === 'hotbar' || source.type === 'backpack';
   const equipLabel = isEquipped ? 'UNEQUIP' : 'EQUIP';
+  const scrapResults = item.scrapResult?.map(r => ({
+    item: ITEMS[r.itemId],
+    count: r.count * slot.count,
+  })).filter(r => r.item) ?? [];
 
   return (
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center"
       onClick={onClose}
     >
-      {/* Backdrop */}
       <div className="absolute inset-0 bg-black/70" />
 
-      {/* Panel */}
       <div
         className="relative w-[340px] max-w-[90vw] popup-panel"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Rarity accent bar */}
         <div className={`h-2 rounded-t-xl rarity-bar-${item.rarity}`} />
 
-        {/* Close button */}
         <button
           onClick={onClose}
           className="absolute top-3 right-3 w-8 h-8 rounded-lg bg-muted border-[3px] border-border flex items-center justify-center hover:border-destructive transition-colors z-10"
@@ -100,42 +105,137 @@ export function ItemDetailPopup({ slot, source, onClose, onEquip, onSell, onRecy
           {/* Footer info */}
           <div className="flex items-center justify-between text-[10px] font-game text-muted-foreground game-outline mb-4">
             <span className="uppercase">{item.category}</span>
-            <span>
-              {slot.count}/{item.maxStack}
-            </span>
+            <span>{slot.count}/{item.maxStack}</span>
           </div>
 
-          {/* Action buttons */}
-          <div className="flex gap-1.5">
-            {onEquip && (
-              <button
-                onClick={() => { onEquip(); onClose(); }}
-                className="popup-btn popup-btn-equip flex-1"
-              >
-                <ArrowRightLeft size={16} strokeWidth={3} />
-                <span>{equipLabel}</span>
-              </button>
-            )}
-            {onSell && item.sellValue && (
-              <button
-                onClick={() => { onSell(); onClose(); }}
-                className="popup-btn popup-btn-sell flex-1"
-              >
-                <Coins size={16} strokeWidth={3} />
-                <span>{item.sellValue} ¢</span>
-              </button>
-            )}
-            {onRecycle && (
-              <button
-                onClick={() => { onRecycle(); onClose(); }}
-                className="popup-btn popup-btn-recycle flex-1"
-              >
-                <Recycle size={16} strokeWidth={3} />
-                <span>SCRAP</span>
-              </button>
-            )}
-          </div>
+          {/* Confirmation overlays */}
+          {confirmMode === 'sell' && (
+            <SellConfirm
+              itemName={item.name}
+              count={slot.count}
+              sellValue={(item.sellValue ?? 0) * slot.count}
+              onConfirm={() => { onSell?.(); onClose(); }}
+              onCancel={() => setConfirmMode(null)}
+            />
+          )}
+
+          {confirmMode === 'scrap' && (
+            <ScrapConfirm
+              itemName={item.name}
+              count={slot.count}
+              results={scrapResults}
+              onConfirm={() => { onRecycle?.(); onClose(); }}
+              onCancel={() => setConfirmMode(null)}
+            />
+          )}
+
+          {/* Action buttons (hidden during confirm) */}
+          {!confirmMode && (
+            <div className="flex gap-1.5">
+              {onEquip && (
+                <button
+                  onClick={() => { onEquip(); onClose(); }}
+                  className="popup-btn popup-btn-equip flex-1"
+                >
+                  <ArrowRightLeft size={16} strokeWidth={3} />
+                  <span>{equipLabel}</span>
+                </button>
+              )}
+              {onSell && item.sellValue && (
+                <button
+                  onClick={() => setConfirmMode('sell')}
+                  className="popup-btn popup-btn-sell flex-1"
+                >
+                  <Coins size={16} strokeWidth={3} />
+                  <span>{(item.sellValue ?? 0) * slot.count} ¢</span>
+                </button>
+              )}
+              {onRecycle && (
+                <button
+                  onClick={() => setConfirmMode('scrap')}
+                  className="popup-btn popup-btn-recycle flex-1"
+                >
+                  <Recycle size={16} strokeWidth={3} />
+                  <span>SCRAP</span>
+                </button>
+              )}
+            </div>
+          )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Sell Confirmation ── */
+function SellConfirm({
+  itemName, count, sellValue, onConfirm, onCancel,
+}: {
+  itemName: string; count: number; sellValue: number;
+  onConfirm: () => void; onCancel: () => void;
+}) {
+  return (
+    <div className="confirm-box confirm-box-sell">
+      <div className="flex items-center gap-2 mb-2">
+        <AlertTriangle size={18} strokeWidth={3} className="text-primary" />
+        <span className="font-game text-xs text-foreground game-outline uppercase">Sell Item?</span>
+      </div>
+      <p className="text-[11px] text-muted-foreground mb-3">
+        Sell <span className="text-foreground font-bold">{count}x {itemName}</span> for{' '}
+        <span className="text-primary font-bold">{sellValue} ¢</span>?
+      </p>
+      <div className="flex gap-1.5">
+        <button onClick={onCancel} className="popup-btn popup-btn-cancel flex-1">
+          <X size={14} strokeWidth={3} />
+          <span>CANCEL</span>
+        </button>
+        <button onClick={onConfirm} className="popup-btn popup-btn-sell flex-1">
+          <Check size={14} strokeWidth={3} />
+          <span>SELL</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ── Scrap Confirmation ── */
+function ScrapConfirm({
+  itemName, count, results, onConfirm, onCancel,
+}: {
+  itemName: string; count: number;
+  results: { item: typeof ITEMS[string]; count: number }[];
+  onConfirm: () => void; onCancel: () => void;
+}) {
+  return (
+    <div className="confirm-box confirm-box-scrap">
+      <div className="flex items-center gap-2 mb-2">
+        <Recycle size={18} strokeWidth={3} className="text-accent" />
+        <span className="font-game text-xs text-foreground game-outline uppercase">Scrap Item?</span>
+      </div>
+      <p className="text-[11px] text-muted-foreground mb-2">
+        Break down <span className="text-foreground font-bold">{count}x {itemName}</span> into:
+      </p>
+
+      {/* Scrap results */}
+      <div className="flex flex-wrap gap-1.5 mb-3">
+        {results.map((r) => (
+          <div key={r.item.id} className="scrap-result-item">
+            <ItemIcon item={r.item} size={16} />
+            <span className="font-game text-xs text-foreground game-outline">{r.count}x</span>
+            <span className="text-[10px] text-muted-foreground font-bold">{r.item.name}</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="flex gap-1.5">
+        <button onClick={onCancel} className="popup-btn popup-btn-cancel flex-1">
+          <X size={14} strokeWidth={3} />
+          <span>CANCEL</span>
+        </button>
+        <button onClick={onConfirm} className="popup-btn popup-btn-recycle flex-1">
+          <Check size={14} strokeWidth={3} />
+          <span>SCRAP</span>
+        </button>
       </div>
     </div>
   );
