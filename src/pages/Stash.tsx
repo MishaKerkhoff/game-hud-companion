@@ -30,7 +30,7 @@ export default function Stash() {
   const weightPct = Math.min((weight / MAX_WEIGHT) * 100, 100);
 
   const filteredStash = activeCategory
-    ? stash.map(slot => (slot.item?.category === activeCategory ? slot : { ...slot, _hidden: true }))
+    ? stash.filter(slot => slot.item?.category === activeCategory)
     : stash;
 
   const makeDrop = (targetType: string, targetIndex: number | string) =>
@@ -76,21 +76,22 @@ export default function Stash() {
 
           <ScrollArea className="flex-1">
             <div className="grid grid-cols-6 gap-1">
-              {filteredStash.map((slot, i) => {
-                const hidden = (slot as any)._hidden;
-                return (
-                  <div key={i} className={hidden ? 'opacity-20 pointer-events-none' : ''}>
-                    <InventorySlotUI
-                      slot={{ item: slot.item, count: slot.count }}
-                      size="md"
-                      dragType="stash"
-                      dragIndex={i}
-                      onDragStart={noop}
-                      onDrop={makeDrop('stash', i)}
-                    />
-                  </div>
-                );
-              })}
+            {filteredStash.map((slot, i) => {
+              const realIndex = activeCategory
+                ? stash.indexOf(slot)
+                : i;
+              return (
+                <InventorySlotUI
+                  key={realIndex}
+                  slot={slot}
+                  size="md"
+                  dragType="stash"
+                  dragIndex={realIndex}
+                  onDragStart={noop}
+                  onDrop={makeDrop('stash', realIndex)}
+                />
+              );
+            })}
             </div>
           </ScrollArea>
         </div>
