@@ -69,16 +69,16 @@ export default function MenuLayout() {
       </nav>
 
       {/* Content Area */}
-      <div className="relative z-10 flex-1 flex flex-col min-w-0">
+      <div className="relative z-10 flex-1 flex min-w-0">
         {/* Settings top-right */}
-        <div className="flex justify-end p-3">
+        <div className="absolute top-3 right-3 z-20">
           <button className="hud-panel p-2 hover:border-primary/60 transition-colors">
             <Settings size={20} className="text-secondary" />
           </button>
         </div>
 
         {/* Page content */}
-        <div className="flex-1 overflow-auto px-2 md:px-4 pb-4 flex items-center">
+        <div className="flex-1 overflow-auto px-2 md:px-4 py-4 flex items-center justify-center">
           <Outlet />
         </div>
       </div>
