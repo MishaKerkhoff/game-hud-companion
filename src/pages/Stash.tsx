@@ -150,7 +150,7 @@ export default function Stash() {
                 slot={slot}
                 index={i + 1}
                 showNumber
-                size="sm"
+                size="md"
                 dragType="hotbar"
                 dragIndex={i}
                 onDragStart={noop}
