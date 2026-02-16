@@ -19,9 +19,9 @@ function ContentArea() {
   return (
     <div className="relative z-10 flex-1 grid grid-rows-[auto_auto_auto] grid-cols-[1fr_auto] min-w-0 my-auto">
       {/* Header Rail */}
-      <div className="col-span-2 flex items-center justify-end px-3 py-2">
+      <div className="col-span-2 flex items-start justify-end px-3 py-2">
         {headerContent}
-        <button className="hud-panel p-2 hover:border-primary/60 transition-colors">
+        <button className="hud-panel p-2 hover:border-primary/60 transition-colors ml-auto">
           <Settings size={20} className="text-secondary" />
         </button>
       </div>
@@ -39,7 +39,7 @@ function ContentArea() {
       </div>
 
       {/* Footer Rail */}
-      <div className="col-span-2 px-3 py-2">
+      <div className="col-span-2 px-3 py-2 flex items-end">
         {footerContent}
       </div>
     </div>
