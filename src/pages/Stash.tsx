@@ -51,6 +51,15 @@ export default function Stash() {
 
   return (
     <>
+      {/* Footer Rail: placeholder */}
+      <MenuRailSlot slot="footer">
+        <div className="flex items-center gap-2">
+          <button className="hud-panel px-4 py-2 font-game text-xs text-secondary hover:text-primary transition-colors">
+            Placeholder
+          </button>
+        </div>
+      </MenuRailSlot>
+
       {/* Right Rail: Equipment + Hotbar + Backpack */}
       <MenuRailSlot slot="right">
         <div className="hud-panel p-3 flex flex-col">
