@@ -52,7 +52,7 @@ export default function Stash() {
     <div className="flex flex-col md:flex-row gap-3 md:items-stretch items-center justify-center">
       {/* Stash Grid (center/left) */}
       <div className="min-w-0 flex">
-        <div className="hud-panel p-3 flex flex-col">
+        <div className="hud-panel p-3 flex flex-col overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between mb-2">
             <span className="font-game text-sm text-foreground game-outline">
