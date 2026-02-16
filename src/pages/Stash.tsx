@@ -143,7 +143,7 @@ export default function Stash() {
 
           {/* Hotbar */}
           <span className="font-game text-[10px] text-muted-foreground game-outline mb-1 block">Hotbar</span>
-          <div className="flex gap-1 justify-center">
+          <div className="grid grid-cols-4 gap-1">
             {hotbar.map((slot, i) => (
               <InventorySlotUI
                 key={i}
