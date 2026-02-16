@@ -175,7 +175,8 @@ export default function Stash() {
 
           <ScrollArea className="flex-1">
             <div
-              className="grid grid-cols-8 gap-1"
+              className="grid gap-1"
+              style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(3rem, 1fr))' }}
               onDragOver={(e) => e.preventDefault()}
               onDrop={(e) => {
                 e.preventDefault();
