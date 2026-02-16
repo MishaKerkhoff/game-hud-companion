@@ -1,0 +1,158 @@
+import { useStashState } from '@/hooks/useStashState';
+import { InventorySlotUI } from '@/components/game/InventorySlotUI';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Progress } from '@/components/ui/progress';
+import { ArrowDownToLine, ArrowUpDown } from 'lucide-react';
+
+const MAX_WEIGHT = 30;
+
+export default function Stash() {
+  const {
+    stash, backpack, hotbar, equipment,
+    stashCount, stashMax,
+    totalWeight, handleDrop,
+    storeAll, sortStash, sortBackpack,
+  } = useStashState();
+
+  const weight = totalWeight();
+  const weightPct = Math.min((weight / MAX_WEIGHT) * 100, 100);
+
+  const makeDrop = (targetType: string, targetIndex: number | string) =>
+    (sourceType: string, sourceIndex: number | string) =>
+      handleDrop(targetType, targetIndex, sourceType, sourceIndex);
+
+  const noop = () => {};
+
+  return (
+    <div className="flex flex-col md:flex-row gap-3 h-full">
+      {/* Stash Grid (center/left) */}
+      <div className="flex-1 min-w-0">
+        <div className="hud-panel p-3 h-full flex flex-col">
+          <div className="flex items-center justify-between mb-2">
+            <span className="font-game text-sm text-foreground game-outline">
+              Stash <span className="text-muted-foreground">({stashCount}/{stashMax})</span>
+            </span>
+            <button
+              onClick={sortStash}
+              className="hud-panel px-2 py-1 text-[10px] font-game text-secondary hover:text-primary transition-colors flex items-center gap-1"
+            >
+              <ArrowUpDown size={12} /> Sort
+            </button>
+          </div>
+          <ScrollArea className="flex-1">
+            <div className="grid grid-cols-6 gap-1">
+              {stash.map((slot, i) => (
+                <InventorySlotUI
+                  key={i}
+                  slot={slot}
+                  size="md"
+                  dragType="stash"
+                  dragIndex={i}
+                  onDragStart={noop}
+                  onDrop={makeDrop('stash', i)}
+                />
+              ))}
+            </div>
+          </ScrollArea>
+        </div>
+      </div>
+
+      {/* Right panel: equipment + backpack + hotbar */}
+      <div className="w-full md:w-[280px] shrink-0 flex flex-col gap-3">
+        {/* Equipment */}
+        <div className="hud-panel p-3">
+          <span className="font-game text-[10px] text-muted-foreground game-outline mb-1 block">Equipment</span>
+          <div className="flex gap-1 justify-center">
+            {(['weapon', 'bag', 'shield'] as const).map(slot => (
+              <InventorySlotUI
+                key={slot}
+                slot={equipment[slot]}
+                size="md"
+                isWeaponSlot={slot === 'weapon'}
+                label={slot === 'weapon' ? 'WPN' : slot === 'bag' ? 'BAG' : 'SLD'}
+                dragType="equip"
+                dragIndex={slot}
+                onDragStart={noop}
+                onDrop={makeDrop('equip', slot)}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Backpack */}
+        <div className="hud-panel p-3 flex-1 flex flex-col">
+          <div className="flex items-center justify-between mb-2">
+            <span className="font-game text-[10px] text-foreground game-outline">Backpack</span>
+            <div className="flex gap-1">
+              <button
+                onClick={storeAll}
+                className="hud-panel px-2 py-1 text-[10px] font-game text-secondary hover:text-primary transition-colors flex items-center gap-1"
+              >
+                <ArrowDownToLine size={12} /> Store All
+              </button>
+              <button
+                onClick={sortBackpack}
+                className="hud-panel px-2 py-1 text-[10px] font-game text-secondary hover:text-primary transition-colors flex items-center gap-1"
+              >
+                <ArrowUpDown size={12} /> Sort
+              </button>
+            </div>
+          </div>
+          <div className="grid grid-cols-4 gap-1">
+            {backpack.map((slot, i) => (
+              <InventorySlotUI
+                key={i}
+                slot={slot}
+                size="md"
+                dragType="backpack"
+                dragIndex={i}
+                onDragStart={noop}
+                onDrop={makeDrop('backpack', i)}
+              />
+            ))}
+          </div>
+
+          {/* Weight */}
+          <div className="mt-3">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[10px] font-game text-muted-foreground game-outline">Weight</span>
+              <span className="text-[10px] font-game text-foreground game-outline">
+                {weight}/{MAX_WEIGHT} kg
+              </span>
+            </div>
+            <Progress value={weightPct} className="h-2 bg-muted" />
+          </div>
+        </div>
+
+        {/* Hotbar */}
+        <div className="hud-panel p-2">
+          <div className="flex gap-1 justify-center">
+            <InventorySlotUI
+              slot={equipment.weapon}
+              isWeaponSlot
+              size="sm"
+              label="WPN"
+              dragType="equip"
+              dragIndex="weapon"
+              onDragStart={noop}
+              onDrop={makeDrop('equip', 'weapon')}
+            />
+            {hotbar.map((slot, i) => (
+              <InventorySlotUI
+                key={i}
+                slot={slot}
+                index={i + 1}
+                showNumber
+                size="sm"
+                dragType="hotbar"
+                dragIndex={i}
+                onDragStart={noop}
+                onDrop={makeDrop('hotbar', i)}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
