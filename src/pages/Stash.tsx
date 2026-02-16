@@ -49,9 +49,9 @@ export default function Stash() {
   const noop = () => {};
 
   return (
-    <div className="flex flex-col md:flex-row gap-3 h-full items-stretch">
+    <div className="flex flex-col md:flex-row gap-3 h-full items-center justify-center">
       {/* Stash Grid (center/left) */}
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0 self-stretch md:self-auto">
         <div className="hud-panel p-3 h-full flex flex-col">
           {/* Header */}
           <div className="flex items-center justify-between mb-2">
@@ -118,7 +118,7 @@ export default function Stash() {
       </div>
 
       {/* Right panel: unified equipment + hotbar + backpack */}
-      <div className="w-full md:w-[280px] shrink-0 flex flex-col gap-3">
+      <div className="w-full md:w-[280px] shrink-0">
         <div className="hud-panel p-3 flex flex-col">
           {/* Equipment */}
           <span className="font-game text-[10px] text-muted-foreground game-outline mb-1 block">Equipment</span>
