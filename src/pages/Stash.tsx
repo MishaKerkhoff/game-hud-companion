@@ -144,16 +144,6 @@ export default function Stash() {
           {/* Hotbar */}
           <span className="font-game text-[10px] text-muted-foreground game-outline mb-1 block">Hotbar</span>
           <div className="flex gap-1 justify-center">
-            <InventorySlotUI
-              slot={equipment.weapon}
-              isWeaponSlot
-              size="sm"
-              label="WPN"
-              dragType="equip"
-              dragIndex="weapon"
-              onDragStart={noop}
-              onDrop={makeDrop('equip', 'weapon')}
-            />
             {hotbar.map((slot, i) => (
               <InventorySlotUI
                 key={i}
