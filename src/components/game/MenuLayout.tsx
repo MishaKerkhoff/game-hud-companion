@@ -17,7 +17,7 @@ function ContentArea() {
   const { headerContent, rightContent, footerContent } = useMenuRails();
 
   return (
-    <div className="relative z-10 flex-1 grid grid-rows-[auto_auto_auto] grid-cols-[1fr_auto] min-w-0 h-full my-auto">
+    <div className="relative z-10 flex-1 grid grid-rows-[auto_auto_auto] grid-cols-[1fr_auto] min-w-0 my-auto">
       {/* Header Rail */}
       <div className="col-span-2 flex items-center justify-end px-3 py-2">
         {headerContent}
