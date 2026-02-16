@@ -49,7 +49,7 @@ export default function Stash() {
   const noop = () => {};
 
   return (
-    <div className="flex flex-col md:flex-row gap-3 md:items-stretch items-center mx-auto my-auto">
+    <div className="flex flex-col md:flex-row gap-3 md:items-stretch items-center mx-auto my-auto h-full justify-center">
       {/* Stash Grid (center/left) */}
       <div className="flex-1 min-w-0">
         <div className="hud-panel p-3 h-full flex flex-col">
