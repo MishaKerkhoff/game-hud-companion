@@ -165,4 +165,51 @@
     paint-order: stroke fill;
     line-height: 1.1;
   }
+
+  /* Popup action buttons */
+  .popup-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 8px;
+    border-radius: 10px;
+    border: 3px solid;
+    font-family: 'Bungee', cursive;
+    font-size: 11px;
+    text-transform: uppercase;
+    -webkit-text-stroke: 1px hsl(220 20% 10%);
+    paint-order: stroke fill;
+    transition: all 0.15s ease;
+    box-shadow: 0 4px 0 hsl(0 0% 0% / 0.3);
+    cursor: pointer;
+  }
+
+  .popup-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 0 hsl(0 0% 0% / 0.3);
+  }
+
+  .popup-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 hsl(0 0% 0% / 0.3);
+  }
+
+  .popup-btn-equip {
+    background: hsl(var(--secondary));
+    border-color: hsl(200 90% 35%);
+    color: hsl(var(--secondary-foreground));
+  }
+
+  .popup-btn-sell {
+    background: hsl(var(--primary));
+    border-color: hsl(40 100% 40%);
+    color: hsl(var(--primary-foreground));
+  }
+
+  .popup-btn-recycle {
+    background: hsl(var(--accent));
+    border-color: hsl(150 80% 30%);
+    color: hsl(var(--accent-foreground));
+  }
 }

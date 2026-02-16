@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useStashState } from '@/hooks/useStashState';
 import { InventorySlotUI } from '@/components/game/InventorySlotUI';
-import { ItemDetailPopup } from '@/components/game/ItemDetailPopup';
+import { ItemDetailPopup, ItemSource } from '@/components/game/ItemDetailPopup';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Progress } from '@/components/ui/progress';
 import { ArrowDownToLine } from 'lucide-react';
@@ -28,10 +28,12 @@ export default function Stash() {
     stashCount, stashMax,
     totalWeight, handleDrop,
     storeAll, sortStash,
+    removeItem, equipItem, unequipItem,
   } = useStashState();
 
   const [activeCategory, setActiveCategory] = useState<FilterValue | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<InventorySlot | null>(null);
+  const [selectedSource, setSelectedSource] = useState<ItemSource | null>(null);
 
   const weight = totalWeight();
   const weightPct = Math.min((weight / MAX_WEIGHT) * 100, 100);
@@ -50,7 +52,11 @@ export default function Stash() {
       handleDrop(targetType, targetIndex, sourceType, sourceIndex);
 
   const noop = () => {};
-  const handleItemClick = (slot: InventorySlot) => setSelectedSlot(slot);
+  const handleItemClick = (slot: InventorySlot, source: ItemSource) => {
+    setSelectedSlot(slot);
+    setSelectedSource(source);
+  };
+  const closePopup = () => { setSelectedSlot(null); setSelectedSource(null); };
   return (
     <>
       {/* Footer Rail: placeholder */}
@@ -79,7 +85,7 @@ export default function Stash() {
                 dragIndex={slot}
                 onDragStart={noop}
                 onDrop={makeDrop('equip', slot)}
-                onItemClick={handleItemClick}
+                onItemClick={(s) => handleItemClick(s, { type: 'equip', index: slot })}
               />
             ))}
           </div>
@@ -100,7 +106,7 @@ export default function Stash() {
                 dragIndex={i}
                 onDragStart={noop}
                 onDrop={makeDrop('hotbar', i)}
-                onItemClick={handleItemClick}
+                onItemClick={(s) => handleItemClick(s, { type: 'hotbar', index: i })}
               />
             ))}
           </div>
@@ -127,7 +133,7 @@ export default function Stash() {
                 dragIndex={i}
                 onDragStart={noop}
                 onDrop={makeDrop('backpack', i)}
-                onItemClick={handleItemClick}
+                onItemClick={(s) => handleItemClick(s, { type: 'backpack', index: i })}
               />
             ))}
           </div>
@@ -206,7 +212,7 @@ export default function Stash() {
                     dragIndex={realIndex}
                     onDragStart={noop}
                     onDrop={makeDrop('stash', realIndex)}
-                    onItemClick={handleItemClick}
+                    onItemClick={(s) => handleItemClick(s, { type: 'stash', index: realIndex })}
                   />
                 );
               })}
@@ -215,8 +221,22 @@ export default function Stash() {
         </div>
       </div>
 
-      {selectedSlot && selectedSlot.item && (
-        <ItemDetailPopup slot={selectedSlot} onClose={() => setSelectedSlot(null)} />
+      {selectedSlot && selectedSlot.item && selectedSource && (
+        <ItemDetailPopup
+          slot={selectedSlot}
+          source={selectedSource}
+          onClose={closePopup}
+          onEquip={() => {
+            const src = selectedSource;
+            if (src.type === 'stash' || src.type === 'backpack' || src.type === 'hotbar') {
+              equipItem(src.type, src.index as number);
+            } else if (src.type === 'equip') {
+              unequipItem(src.index as string);
+            }
+          }}
+          onSell={() => removeItem(selectedSource.type, selectedSource.index)}
+          onRecycle={() => removeItem(selectedSource.type, selectedSource.index)}
+        />
       )}
     </>
   );
