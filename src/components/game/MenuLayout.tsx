@@ -27,8 +27,10 @@ function ContentArea() {
       </div>
 
       {/* Center */}
-      <div className="overflow-hidden px-2 md:px-4 flex items-center justify-center min-h-0">
-        <Outlet />
+      <div className="relative px-2 md:px-4 min-h-0">
+        <div className="absolute inset-0 px-2 md:px-4 flex items-center justify-center overflow-hidden">
+          <Outlet />
+        </div>
       </div>
 
       {/* Right Rail */}
