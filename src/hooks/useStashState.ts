@@ -186,6 +186,58 @@ export function useStashState() {
     setter(sorted);
   };
 
+  const removeItem = useCallback((type: string, index: number | string) => {
+    if (type === 'stash') setStash(s => { const n = [...s]; n[index as number] = emptySlot(); return n; });
+    else if (type === 'backpack') setBackpack(s => { const n = [...s]; n[index as number] = emptySlot(); return n; });
+    else if (type === 'hotbar') setHotbar(s => { const n = [...s]; n[index as number] = emptySlot(); return n; });
+    else if (type === 'equip') setEquipment(e => ({ ...e, [index as string]: emptySlot() }));
+  }, []);
+
+  const equipItem = useCallback((sourceType: string, sourceIndex: number) => {
+    const getArr = (t: string) => {
+      if (t === 'stash') return { arr: stash, set: setStash };
+      if (t === 'backpack') return { arr: backpack, set: setBackpack };
+      if (t === 'hotbar') return { arr: hotbar, set: setHotbar };
+      return null;
+    };
+    const info = getArr(sourceType);
+    if (!info) return;
+    const srcSlot = info.arr[sourceIndex];
+    if (!srcSlot.item) return;
+    const equipSlotKey = srcSlot.item.equipSlot;
+    if (equipSlotKey) {
+      // Equippable item → swap with equipment slot
+      const prev = equipment[equipSlotKey];
+      setEquipment(e => ({ ...e, [equipSlotKey]: srcSlot }));
+      const newArr = [...info.arr];
+      newArr[sourceIndex] = prev;
+      info.set(newArr);
+    } else {
+      // Non-equippable → move to first empty backpack slot
+      const emptyIdx = backpack.findIndex(s => !s.item);
+      if (emptyIdx === -1) return;
+      const newBp = [...backpack];
+      newBp[emptyIdx] = srcSlot;
+      setBackpack(newBp);
+      const newSrc = [...info.arr];
+      newSrc[sourceIndex] = emptySlot();
+      info.set(newSrc);
+    }
+  }, [stash, backpack, hotbar, equipment]);
+
+  const unequipItem = useCallback((slot: string) => {
+    const equipSlotKey = slot as EquipSlot;
+    const eqSlot = equipment[equipSlotKey];
+    if (!eqSlot.item) return;
+    // Move to first empty stash slot
+    const emptyIdx = stash.findIndex(s => !s.item);
+    if (emptyIdx === -1) return;
+    const newStash = [...stash];
+    newStash[emptyIdx] = eqSlot;
+    setStash(newStash);
+    setEquipment(e => ({ ...e, [equipSlotKey]: emptySlot() }));
+  }, [stash, equipment]);
+
   return {
     stash, backpack, hotbar, equipment,
     stashCount, stashMax: STASH_SIZE,
@@ -194,5 +246,6 @@ export function useStashState() {
     storeAll,
     sortStash: () => sortInventory(stash, setStash),
     sortBackpack: () => sortInventory(backpack, setBackpack),
+    removeItem, equipItem, unequipItem,
   };
 }

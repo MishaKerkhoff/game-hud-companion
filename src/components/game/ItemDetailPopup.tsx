@@ -1,10 +1,19 @@
 import { InventorySlot } from '@/types/game';
 import { ItemIcon } from './ItemIcon';
-import { X, Weight } from 'lucide-react';
+import { X, Weight, ArrowRightLeft, Coins, Recycle } from 'lucide-react';
+
+export type ItemSource = {
+  type: 'stash' | 'backpack' | 'hotbar' | 'equip';
+  index: number | string;
+};
 
 interface ItemDetailPopupProps {
   slot: InventorySlot;
+  source: ItemSource;
   onClose: () => void;
+  onEquip?: () => void;
+  onSell?: () => void;
+  onRecycle?: () => void;
 }
 
 const rarityLabel: Record<string, string> = {
@@ -15,11 +24,13 @@ const rarityLabel: Record<string, string> = {
   legendary: 'LEGENDARY',
 };
 
-export function ItemDetailPopup({ slot, onClose }: ItemDetailPopupProps) {
+export function ItemDetailPopup({ slot, source, onClose, onEquip, onSell, onRecycle }: ItemDetailPopupProps) {
   const item = slot.item;
   if (!item) return null;
 
   const stats = item.stats ? Object.entries(item.stats) : [];
+  const isEquipped = source.type === 'equip' || source.type === 'hotbar' || source.type === 'backpack';
+  const equipLabel = isEquipped ? 'UNEQUIP' : 'EQUIP';
 
   return (
     <div
@@ -35,9 +46,7 @@ export function ItemDetailPopup({ slot, onClose }: ItemDetailPopupProps) {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Rarity accent bar */}
-        <div
-          className={`h-2 rounded-t-xl rarity-bar-${item.rarity}`}
-        />
+        <div className={`h-2 rounded-t-xl rarity-bar-${item.rarity}`} />
 
         {/* Close button */}
         <button
@@ -89,20 +98,43 @@ export function ItemDetailPopup({ slot, onClose }: ItemDetailPopupProps) {
           )}
 
           {/* Footer info */}
-          <div className="flex items-center justify-between text-[10px] font-game text-muted-foreground game-outline">
+          <div className="flex items-center justify-between text-[10px] font-game text-muted-foreground game-outline mb-4">
             <span className="uppercase">{item.category}</span>
             <span>
               {slot.count}/{item.maxStack}
             </span>
           </div>
 
-          {/* Sell value */}
-          {item.sellValue && (
-            <div className="mt-3 pt-3 border-t-[2px] border-border flex items-center justify-between">
-              <span className="text-[10px] font-game text-muted-foreground game-outline uppercase">Sell Value</span>
-              <span className="font-game text-sm text-primary game-outline">{item.sellValue} ¢</span>
-            </div>
-          )}
+          {/* Action buttons */}
+          <div className="flex gap-1.5">
+            {onEquip && (
+              <button
+                onClick={() => { onEquip(); onClose(); }}
+                className="popup-btn popup-btn-equip flex-1"
+              >
+                <ArrowRightLeft size={16} strokeWidth={3} />
+                <span>{equipLabel}</span>
+              </button>
+            )}
+            {onSell && item.sellValue && (
+              <button
+                onClick={() => { onSell(); onClose(); }}
+                className="popup-btn popup-btn-sell flex-1"
+              >
+                <Coins size={16} strokeWidth={3} />
+                <span>{item.sellValue} ¢</span>
+              </button>
+            )}
+            {onRecycle && (
+              <button
+                onClick={() => { onRecycle(); onClose(); }}
+                className="popup-btn popup-btn-recycle flex-1"
+              >
+                <Recycle size={16} strokeWidth={3} />
+                <span>SCRAP</span>
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>
