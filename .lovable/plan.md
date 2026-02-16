@@ -1,20 +1,25 @@
 
-
-# Fix: Match Stash Item Spacing to Backpack
+# Fix: Dynamic Columns with Consistent gap-1 Spacing
 
 ## Problem
-The Backpack uses `grid-cols-4 gap-1` which divides space equally among 4 columns, making items stretch to fill each cell. The Stash grid uses `auto-fill` with `minmax(3rem, 1fr)`, which crams as many columns as possible and doesn't produce the same even, spacious look.
+The current fixed `grid-cols-8` doesn't dynamically adjust column count when the stash widens or narrows. The previous `auto-fill` attempt worked dynamically but the user felt spacing didn't match the backpack.
 
 ## Solution
-Switch the Stash grid from inline `gridTemplateColumns` with `auto-fill` to a Tailwind fixed-column grid with the same `gap-1` as the Backpack. Since the Stash panel is much wider, we'll use more columns (e.g., `grid-cols-8`) so there are roughly 8 items per row, each stretching equally to fill the available width -- exactly matching how the Backpack distributes its 4 columns.
+Use `auto-fill` with `minmax(3rem, 1fr)` again, but this time combined with `gap-1` in the Tailwind class. The `1fr` max ensures each cell stretches equally to fill the row (identical behavior to the backpack's `grid-cols-4` where cells expand proportionally). The `3rem` min ensures columns break responsively. The `gap-1` stays consistent regardless of column count.
+
+This is effectively the same proportional-stretch behavior as the backpack, just with a dynamic column count.
 
 ## Changes
 
-### `src/pages/Stash.tsx` (stash grid, ~line 176-179)
-- Remove the inline `style={{ gridTemplateColumns: ... }}`
-- Change `className="grid gap-1"` to `className="grid grid-cols-8 gap-1"`
-
-This gives items the same proportional stretch behavior as the Backpack's `grid-cols-4 gap-1`.
+### `src/pages/Stash.tsx` (line 178)
+Change:
+```tsx
+className="grid grid-cols-8 gap-1"
+```
+To:
+```tsx
+className="grid gap-1"
+style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(3rem, 1fr))' }}
+```
 
 One line changed, no new dependencies.
-
