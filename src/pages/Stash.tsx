@@ -8,7 +8,7 @@ import { ArrowDownToLine } from 'lucide-react';
 import { ItemCategory, InventorySlot } from '@/types/game';
 import { MenuRailSlot } from '@/contexts/MenuRailContext';
 
-const MAX_WEIGHT = 30;
+const MAX_WEIGHT = 30; // kg capacity
 
 type FilterValue = ItemCategory | 'bag' | 'shield';
 
