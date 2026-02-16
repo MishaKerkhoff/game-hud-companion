@@ -84,11 +84,22 @@ export default function Stash() {
           </div>
 
           <ScrollArea className="flex-1">
-            <div className="grid grid-cols-6 gap-1">
-            {filteredStash.map((slot, i) => {
-              const realIndex = activeCategory
-                ? stash.indexOf(slot)
-                : i;
+            <div
+              className="grid grid-cols-6 gap-1"
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => {
+                e.preventDefault();
+                try {
+                  const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+                  const emptyIdx = stash.findIndex(s => !s.item);
+                  if (emptyIdx !== -1) {
+                    handleDrop('stash', emptyIdx, data.type, data.index);
+                  }
+                } catch {}
+              }}
+            >
+            {filteredStash.map((slot) => {
+              const realIndex = stash.indexOf(slot);
               return (
                 <InventorySlotUI
                   key={realIndex}
