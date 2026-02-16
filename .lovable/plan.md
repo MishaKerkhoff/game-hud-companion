@@ -1,39 +1,20 @@
 
 
-# Fix: Lock Stash Height to Right Rail Height
+# Fix: Match Stash Item Spacing to Backpack
 
 ## Problem
-With `grid-rows-[auto_auto_auto]`, the middle row sizes to the tallest cell. If the Stash content is naturally taller than the Right Rail panel, it pushes the row height up. We need the row height to be determined **solely** by the Right Rail.
+The Backpack uses `grid-cols-4 gap-1` which divides space equally among 4 columns, making items stretch to fill each cell. The Stash grid uses `auto-fill` with `minmax(3rem, 1fr)`, which crams as many columns as possible and doesn't produce the same even, spacious look.
 
 ## Solution
-Use a `position: relative` / `position: absolute` pattern on the center cell so its content doesn't participate in the grid's intrinsic sizing. The Right Rail alone determines the row height, and the Stash panel fills that height via absolute positioning and scrolls internally.
+Switch the Stash grid from inline `gridTemplateColumns` with `auto-fill` to a Tailwind fixed-column grid with the same `gap-1` as the Backpack. Since the Stash panel is much wider, we'll use more columns (e.g., `grid-cols-8`) so there are roughly 8 items per row, each stretching equally to fill the available width -- exactly matching how the Backpack distributes its 4 columns.
 
 ## Changes
 
-### `src/components/game/MenuLayout.tsx` (line 30-32, the Center cell)
-Change from:
-```
-<div className="overflow-hidden px-2 md:px-4 flex items-center justify-center min-h-0">
-  <Outlet />
-</div>
-```
-To:
-```
-<div className="relative px-2 md:px-4 min-h-0">
-  <div className="absolute inset-0 px-2 md:px-4 flex items-center justify-center overflow-hidden">
-    <Outlet />
-  </div>
-</div>
-```
+### `src/pages/Stash.tsx` (stash grid, ~line 176-179)
+- Remove the inline `style={{ gridTemplateColumns: ... }}`
+- Change `className="grid gap-1"` to `className="grid grid-cols-8 gap-1"`
 
-The outer div is the grid cell -- it has no intrinsic content height (empty), so it contributes 0 to the `auto` row calculation. The inner absolute div fills the cell (which stretches to match the Right Rail via default `align-self: stretch`) and clips/scrolls the Stash content within.
+This gives items the same proportional stretch behavior as the Backpack's `grid-cols-4 gap-1`.
 
-### `src/pages/Stash.tsx`
-No changes needed. The existing `h-full w-full flex overflow-hidden` wrapper and internal `ScrollArea` will work correctly once the parent constrains the height.
+One line changed, no new dependencies.
 
-## Technical Detail
-- Grid `auto` tracks size to intrinsic content. An empty relative container has 0 intrinsic height.
-- Grid items default to `align-self: stretch`, so the empty center cell still stretches to match the Right Rail's row height.
-- The absolutely-positioned inner div then fills that stretched cell, giving the Stash exactly the Right Rail's height.
-
-One file changed, no new dependencies.
