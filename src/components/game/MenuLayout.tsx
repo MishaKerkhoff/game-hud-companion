@@ -3,6 +3,7 @@ import {
   Swords, Package, ShoppingCart, Hammer, BarChart3, Settings,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { MenuRailProvider, useMenuRails } from '@/contexts/MenuRailContext';
 
 const navItems = [
   { label: 'Play', icon: Swords, route: '/' },
@@ -11,6 +12,37 @@ const navItems = [
   { label: 'Craft', icon: Hammer, route: '/craft' },
   { label: 'Stats', icon: BarChart3, route: '/stats' },
 ] as const;
+
+function ContentArea() {
+  const { headerContent, rightContent, footerContent } = useMenuRails();
+
+  return (
+    <div className="relative z-10 flex-1 grid grid-rows-[auto_1fr_auto] grid-cols-[1fr_auto] min-w-0 h-full">
+      {/* Header Rail */}
+      <div className="col-span-2 flex items-center justify-end px-3 py-2">
+        {headerContent}
+        <button className="hud-panel p-2 hover:border-primary/60 transition-colors">
+          <Settings size={20} className="text-secondary" />
+        </button>
+      </div>
+
+      {/* Center */}
+      <div className="overflow-auto px-2 md:px-4 flex items-center justify-center min-h-0">
+        <Outlet />
+      </div>
+
+      {/* Right Rail */}
+      <div className="flex flex-col items-center justify-center px-2 shrink-0">
+        {rightContent}
+      </div>
+
+      {/* Footer Rail */}
+      <div className="col-span-2 px-3 py-2">
+        {footerContent}
+      </div>
+    </div>
+  );
+}
 
 export default function MenuLayout() {
   const navigate = useNavigate();
@@ -68,20 +100,10 @@ export default function MenuLayout() {
         </div>
       </nav>
 
-      {/* Content Area */}
-      <div className="relative z-10 flex-1 flex min-w-0">
-        {/* Settings top-right */}
-        <div className="absolute top-3 right-3 z-20">
-          <button className="hud-panel p-2 hover:border-primary/60 transition-colors">
-            <Settings size={20} className="text-secondary" />
-          </button>
-        </div>
-
-        {/* Page content */}
-        <div className="flex-1 overflow-auto px-2 md:px-4 py-4 flex items-center justify-center">
-          <Outlet />
-        </div>
-      </div>
+      {/* Content Area with Rails */}
+      <MenuRailProvider>
+        <ContentArea />
+      </MenuRailProvider>
     </div>
   );
 }
