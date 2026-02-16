@@ -1,25 +1,23 @@
 
-# Fix: Dynamic Columns with Consistent gap-1 Spacing
+
+# Fix: Make Stash Items Fill Grid Cells
 
 ## Problem
-The current fixed `grid-cols-8` doesn't dynamically adjust column count when the stash widens or narrows. The previous `auto-fill` attempt worked dynamically but the user felt spacing didn't match the backpack.
+The stash grid cells stretch dynamically (`1fr`), but the items inside have **fixed widths** (`w-12 md:w-14`). When many columns fit, cells shrink close to the fixed item size, making the 4px gap nearly invisible. When fewer columns fit, cells are much wider than the items, creating large empty space around each item. The gap is always 4px -- it just looks inconsistent because items don't fill their cells.
 
 ## Solution
-Use `auto-fill` with `minmax(3rem, 1fr)` again, but this time combined with `gap-1` in the Tailwind class. The `1fr` max ensures each cell stretches equally to fill the row (identical behavior to the backpack's `grid-cols-4` where cells expand proportionally). The `3rem` min ensures columns break responsively. The `gap-1` stays consistent regardless of column count.
+Make the inventory slot buttons use `w-full` (fill their parent cell) instead of fixed widths when used in a grid context. This way items stretch proportionally with the grid, and the 4px gap between cells becomes the only visible spacing -- consistent at any column count.
 
-This is effectively the same proportional-stretch behavior as the backpack, just with a dynamic column count.
+We'll add an optional `fullWidth` prop to `InventorySlotUI` so the stash can opt into `w-full` behavior without affecting other uses (hotbar, equipment, backpack) that rely on fixed widths.
 
 ## Changes
 
-### `src/pages/Stash.tsx` (line 178)
-Change:
-```tsx
-className="grid grid-cols-8 gap-1"
-```
-To:
-```tsx
-className="grid gap-1"
-style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(3rem, 1fr))' }}
-```
+### 1. `src/components/game/InventorySlotUI.tsx`
+- Add an optional `fullWidth?: boolean` prop
+- When `fullWidth` is true, apply `w-full` instead of the fixed width class
+- Height remains the same (fixed height is fine since rows don't stretch)
 
-One line changed, no new dependencies.
+### 2. `src/pages/Stash.tsx`
+- Pass `fullWidth` to each `InventorySlotUI` rendered in the stash grid
+
+No new dependencies. Two files changed.
