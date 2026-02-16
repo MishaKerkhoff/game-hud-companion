@@ -1,32 +1,25 @@
 
 
-# Stash Page Adjustments
+# Constrain Stash Panel Height to Match Loadout Panel
 
-## Overview
-Four changes: add Bag and Shield category filters, remove empty stash slots from display, make the stash panel match the right panel height, and vertically center the left nav rail.
+## Problem
+The stash grid has many items that stretch the left panel taller than the right loadout panel. CSS Grid rows expand to fit the tallest cell, so the stash content drives the height. The stash panel should instead match the right panel's height and scroll internally.
+
+## Solution
+Use a React ref to measure the right (loadout) panel's rendered height, then apply that as a fixed height constraint on the left (stash) panel. This way the loadout panel defines the height, and the stash panel scrolls its content within that same height.
 
 ## Changes
 
-### 1. `src/pages/Stash.tsx`
-
-**Add Bag and Shield filter categories**
-- Update the `CATEGORIES` array to include `{ label: 'Bags', value: 'bag' }` and `{ label: 'Shields', value: 'shield' }`. These will filter by `equipSlot` rather than `category`, so the filtering logic needs a small tweak -- or we can add corresponding item categories. Since the current type system uses `equipSlot` for bag/shield, we will filter by checking `slot.item?.equipSlot === 'bag'` or `'shield'` for those two filters, while the rest filter by `category`.
-
-**Remove empty slots from stash grid**
-- Change `filteredStash` to always exclude empty slots: filter out any slot where `item` is `null`, then apply the category filter on top. This means the stash only shows occupied slots -- no empty grid squares.
-
-**Match stash panel height to right panel**
-- Change the outer flex container to use `h-full` with both columns, and ensure the stash `hud-panel` div uses `h-full` to stretch to match the right panel. Both panels will be children of a flex row that fills the available height equally.
-
-### 2. `src/components/game/MenuLayout.tsx`
-
-**Vertically center the left nav rail**
-- Change the nav element from `py-4` top-aligned to `justify-center` so the `hud-panel` button group sits in the vertical center of the screen.
+### `src/pages/Stash.tsx`
+- Add a `useRef` and `useEffect` to measure the right panel's height after render.
+- Store the measured height in state.
+- Apply that height as an inline `style={{ height }}` on the left stash panel wrapper.
+- Add a `ResizeObserver` so it stays in sync if the right panel ever changes size (e.g., window resize).
+- The `ScrollArea` inside the stash panel will then properly scroll within the constrained height.
 
 ### Technical Details
-
-- The filter type will be a union: `ItemCategory | 'bag' | 'shield' | null`. For "Bag" and "Shield" filters, we check `slot.item?.equipSlot` instead of `slot.item?.category`.
-- The stash grid will only render slots with items, making it a compact list rather than a fixed grid with empties.
-- The stash panel gets `h-full` to match the loadout panel height, keeping a uniform look.
-- The nav rail gets `justify-center` added to vertically center the button group within the viewport height.
+- `useRef<HTMLDivElement>` on the right panel div.
+- `useEffect` with a `ResizeObserver` watching the right panel, updating a `panelHeight` state variable.
+- Left panel wrapper gets `style={{ height: panelHeight ? panelHeight + 'px' : 'auto' }}` plus `overflow-hidden` so the `ScrollArea` handles scrolling.
+- No changes to other files needed.
 
