@@ -34,7 +34,7 @@ function ContentArea() {
       </div>
 
       {/* Right Rail */}
-      <div className="flex flex-col items-center justify-center px-2 shrink-0">
+      <div className="flex flex-col items-center justify-start px-2 shrink-0">
         {rightContent}
       </div>
 
