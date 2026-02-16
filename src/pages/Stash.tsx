@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useStashState } from '@/hooks/useStashState';
 import { InventorySlotUI } from '@/components/game/InventorySlotUI';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -29,6 +29,19 @@ export default function Stash() {
   } = useStashState();
 
   const [activeCategory, setActiveCategory] = useState<FilterValue | null>(null);
+  const [panelHeight, setPanelHeight] = useState<number | null>(null);
+  const rightPanelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!rightPanelRef.current) return;
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setPanelHeight(entry.contentRect.height);
+      }
+    });
+    observer.observe(rightPanelRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   const weight = totalWeight();
   const weightPct = Math.min((weight / MAX_WEIGHT) * 100, 100);
@@ -51,7 +64,7 @@ export default function Stash() {
   return (
     <div className="md:grid md:grid-cols-[1fr_280px] flex flex-col gap-3 items-center justify-center">
       {/* Stash Grid (center/left) */}
-      <div className="min-w-0 min-h-0 h-full flex">
+      <div className="min-w-0 min-h-0 flex" style={{ height: panelHeight ? `${panelHeight}px` : 'auto' }}>
         <div className="hud-panel p-3 flex flex-col min-h-0 overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between mb-2">
@@ -118,7 +131,7 @@ export default function Stash() {
       </div>
 
       {/* Right panel: unified equipment + hotbar + backpack */}
-      <div className="w-full md:w-auto shrink-0">
+      <div ref={rightPanelRef} className="w-full md:w-auto shrink-0">
         <div className="hud-panel p-3 flex flex-col">
           {/* Equipment */}
           <span className="font-game text-[10px] text-muted-foreground game-outline mb-1 block">Equipment</span>
