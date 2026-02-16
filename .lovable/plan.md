@@ -1,18 +1,39 @@
 
 
-# Fix: Stash div stretching with window height
+# Fix: Lock Stash Height to Right Rail Height
 
 ## Problem
-The grid container on line 20 has `h-full`, which forces it to fill the entire viewport height. When the grid is taller than its content, CSS Grid distributes the extra space among the `auto` rows, causing the Stash panel to stretch. The `my-auto` centering also can't work because `h-full` already makes the container 100% tall.
+With `grid-rows-[auto_auto_auto]`, the middle row sizes to the tallest cell. If the Stash content is naturally taller than the Right Rail panel, it pushes the row height up. We need the row height to be determined **solely** by the Right Rail.
 
 ## Solution
-Remove `h-full` from the grid container's className. This lets the grid size to its natural content height (determined by the Right Rail), and `my-auto` will then properly center the block vertically within the flex parent.
+Use a `position: relative` / `position: absolute` pattern on the center cell so its content doesn't participate in the grid's intrinsic sizing. The Right Rail alone determines the row height, and the Stash panel fills that height via absolute positioning and scrolls internally.
 
 ## Changes
 
-### `src/components/game/MenuLayout.tsx` (line 20)
-- Change: `"relative z-10 flex-1 grid grid-rows-[auto_auto_auto] grid-cols-[1fr_auto] min-w-0 h-full my-auto"`
-- To: `"relative z-10 flex-1 grid grid-rows-[auto_auto_auto] grid-cols-[1fr_auto] min-w-0 my-auto"`
+### `src/components/game/MenuLayout.tsx` (line 30-32, the Center cell)
+Change from:
+```
+<div className="overflow-hidden px-2 md:px-4 flex items-center justify-center min-h-0">
+  <Outlet />
+</div>
+```
+To:
+```
+<div className="relative px-2 md:px-4 min-h-0">
+  <div className="absolute inset-0 px-2 md:px-4 flex items-center justify-center overflow-hidden">
+    <Outlet />
+  </div>
+</div>
+```
 
-One class removed (`h-full`), no other files affected.
+The outer div is the grid cell -- it has no intrinsic content height (empty), so it contributes 0 to the `auto` row calculation. The inner absolute div fills the cell (which stretches to match the Right Rail via default `align-self: stretch`) and clips/scrolls the Stash content within.
 
+### `src/pages/Stash.tsx`
+No changes needed. The existing `h-full w-full flex overflow-hidden` wrapper and internal `ScrollArea` will work correctly once the parent constrains the height.
+
+## Technical Detail
+- Grid `auto` tracks size to intrinsic content. An empty relative container has 0 intrinsic height.
+- Grid items default to `align-self: stretch`, so the empty center cell still stretches to match the Right Rail's row height.
+- The absolutely-positioned inner div then fills that stretched cell, giving the Stash exactly the Right Rail's height.
+
+One file changed, no new dependencies.
