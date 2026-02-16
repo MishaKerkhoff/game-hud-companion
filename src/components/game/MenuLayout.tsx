@@ -27,7 +27,7 @@ function ContentArea() {
       </div>
 
       {/* Center */}
-      <div className="overflow-auto px-2 md:px-4 flex items-center justify-center min-h-0">
+      <div className="overflow-hidden px-2 md:px-4 flex items-center justify-center min-h-0">
         <Outlet />
       </div>
 
