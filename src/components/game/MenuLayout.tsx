@@ -32,7 +32,7 @@ export default function MenuLayout() {
       />
 
       {/* Left Nav Rail */}
-      <nav className="relative z-10 flex flex-col items-center gap-2 py-4 px-2 w-16 md:w-20 shrink-0">
+      <nav className="relative z-10 flex flex-col items-center justify-center gap-2 px-2 w-16 md:w-20 shrink-0">
         <div className="hud-panel flex flex-col items-center gap-1 py-3 px-1 w-full">
           {navItems.map(({ label, icon: Icon, route }) => {
             const active = location.pathname === route;
