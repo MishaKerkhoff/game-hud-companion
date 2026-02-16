@@ -13,46 +13,14 @@ const navItems = [
   { label: 'Stats', icon: BarChart3, route: '/stats' },
 ] as const;
 
-function ContentArea() {
+function GridContent() {
   const { headerContent, rightContent, footerContent } = useMenuRails();
-
-  return (
-    <div className="relative z-10 flex-1 grid grid-rows-[auto_1fr_auto] grid-cols-[1fr_auto] min-w-0">
-      {/* Header Rail */}
-      <div className="col-span-2 flex items-start justify-end px-3 py-2">
-        {headerContent}
-        <button className="hud-panel p-2 hover:border-primary/60 transition-colors ml-auto">
-          <Settings size={20} className="text-secondary" />
-        </button>
-      </div>
-
-      {/* Center */}
-      <div className="relative px-2 md:px-4 min-h-0">
-        <div className="absolute inset-0 px-2 md:px-4 flex items-center justify-center overflow-hidden">
-          <Outlet />
-        </div>
-      </div>
-
-      {/* Right Rail */}
-      <div className="flex flex-col items-center justify-start px-2 shrink-0">
-        {rightContent}
-      </div>
-
-      {/* Footer Rail */}
-      <div className="col-span-2 px-3 py-2 flex items-end">
-        {footerContent}
-      </div>
-    </div>
-  );
-}
-
-export default function MenuLayout() {
   const navigate = useNavigate();
   const location = useLocation();
 
   return (
     <div
-      className="flex w-screen h-screen overflow-hidden select-none"
+      className="w-screen h-screen overflow-hidden select-none grid grid-rows-[auto_auto_1fr] grid-cols-[auto_1fr_auto]"
       style={{ background: 'radial-gradient(ellipse at 50% 40%, hsl(220 25% 18%), hsl(220 20% 8%))' }}
     >
       {/* Decorative grid overlay */}
@@ -65,7 +33,15 @@ export default function MenuLayout() {
         }}
       />
 
-      {/* Left Nav Rail */}
+      {/* Row 1: Header - spans all 3 columns */}
+      <div className="relative z-10 col-span-3 flex items-start justify-end px-3 py-2">
+        {headerContent}
+        <button className="hud-panel p-2 hover:border-primary/60 transition-colors ml-auto">
+          <Settings size={20} className="text-secondary" />
+        </button>
+      </div>
+
+      {/* Row 2, Col 1: Left Nav Rail */}
       <nav className="relative z-10 flex flex-col items-center justify-center gap-2 px-2 w-16 md:w-20 shrink-0">
         <div className="hud-panel flex flex-col items-center gap-1 py-3 px-1 w-full">
           {navItems.map(({ label, icon: Icon, route }) => {
@@ -102,10 +78,28 @@ export default function MenuLayout() {
         </div>
       </nav>
 
-      {/* Content Area with Rails */}
-      <MenuRailProvider>
-        <ContentArea />
-      </MenuRailProvider>
+      {/* Row 2, Col 2: Center Content */}
+      <div className="relative z-10 px-2 md:px-4 min-h-0 overflow-hidden">
+        <Outlet />
+      </div>
+
+      {/* Row 2, Col 3: Right Rail */}
+      <div className="relative z-10 flex flex-col items-center justify-start px-2 shrink-0">
+        {rightContent}
+      </div>
+
+      {/* Row 3: Footer - spans all 3 columns, pinned to bottom */}
+      <div className="relative z-10 col-span-3 px-3 py-2 flex items-end self-end">
+        {footerContent}
+      </div>
     </div>
+  );
+}
+
+export default function MenuLayout() {
+  return (
+    <MenuRailProvider>
+      <GridContent />
+    </MenuRailProvider>
   );
 }
