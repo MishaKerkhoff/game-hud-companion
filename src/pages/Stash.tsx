@@ -8,12 +8,16 @@ import { ItemCategory } from '@/types/game';
 
 const MAX_WEIGHT = 30;
 
-const CATEGORIES: { label: string; value: ItemCategory }[] = [
+type FilterValue = ItemCategory | 'bag' | 'shield';
+
+const CATEGORIES: { label: string; value: FilterValue }[] = [
   { label: 'Ammo', value: 'ammo' },
   { label: 'Consumables', value: 'consumable' },
   { label: 'Materials', value: 'material' },
   { label: 'Accessories', value: 'accessory' },
   { label: 'Weapons', value: 'weapon' },
+  { label: 'Bags', value: 'bag' },
+  { label: 'Shields', value: 'shield' },
 ];
 
 export default function Stash() {
@@ -24,14 +28,19 @@ export default function Stash() {
     storeAll, sortStash,
   } = useStashState();
 
-  const [activeCategory, setActiveCategory] = useState<ItemCategory | null>(null);
+  const [activeCategory, setActiveCategory] = useState<FilterValue | null>(null);
 
   const weight = totalWeight();
   const weightPct = Math.min((weight / MAX_WEIGHT) * 100, 100);
 
-  const filteredStash = activeCategory
-    ? stash.filter(slot => slot.item?.category === activeCategory)
-    : stash;
+  const filteredStash = stash.filter(slot => {
+    if (!slot.item) return false;
+    if (!activeCategory) return true;
+    if (activeCategory === 'bag' || activeCategory === 'shield') {
+      return slot.item.equipSlot === activeCategory;
+    }
+    return slot.item.category === activeCategory;
+  });
 
   const makeDrop = (targetType: string, targetIndex: number | string) =>
     (sourceType: string, sourceIndex: number | string) =>
@@ -40,7 +49,7 @@ export default function Stash() {
   const noop = () => {};
 
   return (
-    <div className="flex flex-col md:flex-row gap-3 h-full">
+    <div className="flex flex-col md:flex-row gap-3 h-full items-stretch">
       {/* Stash Grid (center/left) */}
       <div className="flex-1 min-w-0">
         <div className="hud-panel p-3 h-full flex flex-col">
