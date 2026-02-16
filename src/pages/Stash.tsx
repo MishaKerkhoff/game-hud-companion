@@ -196,6 +196,7 @@ export default function Stash() {
                     key={realIndex}
                     slot={slot}
                     size="md"
+                    fullWidth
                     dragType="stash"
                     dragIndex={realIndex}
                     onDragStart={noop}
