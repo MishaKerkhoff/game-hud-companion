@@ -11,6 +11,9 @@ export interface GameItem {
   weight: number;
   equipSlot?: EquipSlot;
   rarity: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+  description?: string;
+  stats?: Record<string, string | number>;
+  sellValue?: number;
 }
 
 export interface InventorySlot {

@@ -9,6 +9,7 @@ interface InventorySlotUIProps {
   showNumber?: boolean;
   size?: 'sm' | 'md' | 'lg';
   onClick?: () => void;
+  onItemClick?: (slot: InventorySlot) => void;
   label?: string;
   isWeaponSlot?: boolean;
   fullWidth?: boolean;
@@ -37,7 +38,7 @@ const weaponWidths = {
 };
 
 export function InventorySlotUI({
-  slot, index, isActive, showNumber, size = 'md', onClick, label,
+  slot, index, isActive, showNumber, size = 'md', onClick, onItemClick, label,
   isWeaponSlot, fullWidth, dragType, dragIndex, onDragStart, onDrop,
 }: InventorySlotUIProps) {
   const rarity = slot.item?.rarity;
@@ -63,7 +64,10 @@ export function InventorySlotUI({
 
   return (
     <button
-      onClick={onClick}
+      onClick={() => {
+        if (slot.item && onItemClick) onItemClick(slot);
+        else if (onClick) onClick();
+      }}
       draggable={!!slot.item && !!dragType}
       onDragStart={handleDragStart}
       onDrop={handleDrop}

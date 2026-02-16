@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useStashState } from '@/hooks/useStashState';
 import { InventorySlotUI } from '@/components/game/InventorySlotUI';
+import { ItemDetailPopup } from '@/components/game/ItemDetailPopup';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Progress } from '@/components/ui/progress';
 import { ArrowDownToLine } from 'lucide-react';
-import { ItemCategory } from '@/types/game';
+import { ItemCategory, InventorySlot } from '@/types/game';
 import { MenuRailSlot } from '@/contexts/MenuRailContext';
 
 const MAX_WEIGHT = 30;
@@ -30,6 +31,7 @@ export default function Stash() {
   } = useStashState();
 
   const [activeCategory, setActiveCategory] = useState<FilterValue | null>(null);
+  const [selectedSlot, setSelectedSlot] = useState<InventorySlot | null>(null);
 
   const weight = totalWeight();
   const weightPct = Math.min((weight / MAX_WEIGHT) * 100, 100);
@@ -48,7 +50,7 @@ export default function Stash() {
       handleDrop(targetType, targetIndex, sourceType, sourceIndex);
 
   const noop = () => {};
-
+  const handleItemClick = (slot: InventorySlot) => setSelectedSlot(slot);
   return (
     <>
       {/* Footer Rail: placeholder */}
@@ -77,6 +79,7 @@ export default function Stash() {
                 dragIndex={slot}
                 onDragStart={noop}
                 onDrop={makeDrop('equip', slot)}
+                onItemClick={handleItemClick}
               />
             ))}
           </div>
@@ -97,6 +100,7 @@ export default function Stash() {
                 dragIndex={i}
                 onDragStart={noop}
                 onDrop={makeDrop('hotbar', i)}
+                onItemClick={handleItemClick}
               />
             ))}
           </div>
@@ -123,6 +127,7 @@ export default function Stash() {
                 dragIndex={i}
                 onDragStart={noop}
                 onDrop={makeDrop('backpack', i)}
+                onItemClick={handleItemClick}
               />
             ))}
           </div>
@@ -201,6 +206,7 @@ export default function Stash() {
                     dragIndex={realIndex}
                     onDragStart={noop}
                     onDrop={makeDrop('stash', realIndex)}
+                    onItemClick={handleItemClick}
                   />
                 );
               })}
@@ -208,6 +214,10 @@ export default function Stash() {
           </ScrollArea>
         </div>
       </div>
+
+      {selectedSlot && selectedSlot.item && (
+        <ItemDetailPopup slot={selectedSlot} onClose={() => setSelectedSlot(null)} />
+      )}
     </>
   );
 }
