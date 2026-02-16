@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { GameState } from '@/types/game';
 import { useIsMobile } from '@/hooks/use-mobile';
 import {
   Clock, Settings, Heart, ChevronUp, ChevronDown,
-  ChevronLeft, ChevronRight, Swords, Flame, Shield, Backpack,
+  ChevronLeft, ChevronRight, Swords, Flame, Shield, Backpack, LogOut, Play,
 } from 'lucide-react';
 
 interface RoamingHUDProps {
@@ -25,9 +26,16 @@ export function RoamingHUD({
   state, setActiveSlot, toggleContainer, toggleBag, isOverlayOpen, onJoystickMove,
 }: RoamingHUDProps) {
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isSettingsOpen) {
+        setIsSettingsOpen(false);
+        return;
+      }
+      if (isSettingsOpen) return;
       const num = parseInt(e.key);
       if (num >= 1 && num <= 5) setActiveSlot(num - 1);
       if (e.key === 'e' || e.key === 'E') toggleContainer();
@@ -35,7 +43,7 @@ export function RoamingHUD({
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [setActiveSlot, toggleContainer, toggleBag]);
+  }, [setActiveSlot, toggleContainer, toggleBag, isSettingsOpen]);
 
   const healthPercent = (state.health / state.maxHealth) * 100;
   const shieldPercent = (state.shield / state.maxShield) * 100;
@@ -87,10 +95,35 @@ export function RoamingHUD({
 
       {/* Top-Right: Settings */}
       <div className="absolute top-3 right-3 md:top-4 md:right-4 pointer-events-auto">
-        <button className="hud-panel p-2 hover:border-primary transition-colors">
+        <button onClick={() => setIsSettingsOpen(true)} className="hud-panel p-2 hover:border-primary transition-colors">
           <Settings size={20} className="text-foreground" />
         </button>
       </div>
+
+      {/* Settings Popup */}
+      {isSettingsOpen && (
+        <div className="absolute inset-0 z-[100] pointer-events-auto flex items-center justify-center">
+          <div className="absolute inset-0 bg-black/60" onClick={() => setIsSettingsOpen(false)} />
+          <div className="hud-panel p-6 flex flex-col items-center gap-4 z-10 min-w-[220px]">
+            <h2 className="font-game text-xl text-foreground game-outline">Settings</h2>
+            <button
+              onClick={() => navigate('/')}
+              className="hud-panel w-full px-4 py-2.5 flex items-center justify-center gap-2 hover:border-destructive transition-colors"
+              style={{ background: 'hsl(0 60% 20% / 0.5)' }}
+            >
+              <LogOut size={18} className="text-destructive" />
+              <span className="font-game text-sm text-destructive game-outline">Leave Match</span>
+            </button>
+            <button
+              onClick={() => setIsSettingsOpen(false)}
+              className="hud-panel w-full px-4 py-2.5 flex items-center justify-center gap-2 hover:border-primary transition-colors"
+            >
+              <Play size={18} className="text-primary" />
+              <span className="font-game text-sm text-primary game-outline">Resume</span>
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Center: Crosshair */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
