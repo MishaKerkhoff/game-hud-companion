@@ -1,22 +1,19 @@
 
 
-# Sync Stash Panel Height with Right Rail
+# Fix: Prevent Stash from stretching beyond Right Rail height
 
 ## Problem
-Now that the stash grid (center) and loadout panel (right rail) are in separate grid cells, the stash panel needs to be constrained to the same height as the right rail so it scrolls internally rather than stretching.
+The grid's middle row uses `1fr`, which expands to fill all remaining vertical space. When the window is tall, the center cell (Stash) grows larger than the right rail's natural content height.
 
 ## Solution
-The CSS Grid row (`1fr`) already sizes the middle row to fit. The fix is simple: ensure the stash panel's wrapper fills the grid cell height exactly (not more, not less) and its internal ScrollArea handles overflow.
+Change the middle row from `1fr` to `auto` so it sizes to the taller of its two cells (center and right rail), rather than stretching to fill the viewport. Then wrap the entire grid in a vertically-centered flex container so the content stays visually centered when there's extra space.
 
 ## Changes
 
-### `src/pages/Stash.tsx`
-- Change the stash wrapper div from `h-full w-full flex` to `h-full w-full flex overflow-hidden` so it constrains to the grid cell height rather than growing with content.
-
 ### `src/components/game/MenuLayout.tsx`
-- Update the Center grid cell from `overflow-auto` to `overflow-hidden` so it does not allow the center area to scroll at the layout level -- scrolling is handled inside the stash panel's own ScrollArea.
-- This ensures the grid cell height is strictly determined by the right rail content, and the center cell clips to that same height.
+- Change `grid-rows-[auto_1fr_auto]` to `grid-rows-[auto_auto_auto]` on the content grid.
+- Add `my-auto` to the grid container so the whole block stays vertically centered when the viewport is taller than the content.
+- The center cell keeps `overflow-hidden` and `min-h-0` so the stash still scrolls internally if needed.
 
-## Technical Detail
-The grid row is `1fr`, which means it takes the remaining space after `auto` header and footer rows. The right rail content (equipment + hotbar + backpack) defines its natural height. With `overflow-hidden` on the center cell, the stash panel is forced to fit within that same row height and scroll internally via its ScrollArea component.
+This is a one-line class change. No other files need modification.
 
