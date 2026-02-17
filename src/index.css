@@ -346,12 +346,12 @@
 
   .skill-tab[data-state="active"] {
     background: var(--tab-color) !important;
-    color: hsl(var(--background)) !important;
+    color: white !important;
     box-shadow: none !important;
   }
 
   .skill-tab[data-state="inactive"] {
-    background: transparent !important;
+    background: hsl(var(--muted) / 0.25) !important;
     color: hsl(var(--muted-foreground)) !important;
   }
 }
