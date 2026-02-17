@@ -139,7 +139,7 @@ function TraderCard({
     >
       {/* Rarity accent bar */}
       <div
-        className="h-2 rounded-t-[12px] -mx-[1px] -mt-[1px] shrink-0"
+        className="h-2 rounded-t-[12px] shrink-0"
         style={{ background: `hsl(${rc})` }}
       />
 
