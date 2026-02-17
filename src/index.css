@@ -161,7 +161,7 @@
   .stat-value {
     display: block;
     font-family: 'Bungee', cursive;
-    font-size: 8px;
+    font-size: 10.5px;
     color: hsl(var(--foreground));
     -webkit-text-stroke: 0.3px hsl(220 20% 10% / 0.4);
     paint-order: stroke fill;
