@@ -1,6 +1,6 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
-  Swords, Package, ShoppingCart, Hammer, BarChart3, Settings,
+  Swords, Package, ShoppingCart, Hammer, User, Settings,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { MenuRailProvider, useMenuRails } from '@/contexts/MenuRailContext';
@@ -10,7 +10,7 @@ const navItems = [
   { label: 'Stash', icon: Package, route: '/stash' },
   { label: 'Shop', icon: ShoppingCart, route: '/shop' },
   { label: 'Craft', icon: Hammer, route: '/craft' },
-  { label: 'Stats', icon: BarChart3, route: '/stats' },
+  { label: 'Raider', icon: User, route: '/stats' },
 ] as const;
 
 function GridContent() {

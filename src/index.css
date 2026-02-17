@@ -251,4 +251,96 @@
     border-radius: 8px;
     padding: 4px 8px;
   }
+
+  /* Raider page */
+  .raider-card {
+    background: hsl(var(--hud-panel));
+    border: 4px solid hsl(var(--hud-border));
+    border-radius: 16px;
+    box-shadow: 0 6px 30px hsl(0 0% 0% / 0.5), inset 0 1px 0 hsl(0 0% 100% / 0.05);
+  }
+
+  .raider-card-selected {
+    border-color: hsl(var(--slot-active));
+    box-shadow: 0 0 20px hsl(var(--slot-active) / 0.4), 0 6px 30px hsl(0 0% 0% / 0.5);
+  }
+
+  .raider-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 4px solid;
+    background: hsl(var(--slot-bg));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 2px 6px hsl(0 0% 0% / 0.3);
+  }
+
+  .raider-nav-arrow {
+    background: hsl(var(--hud-panel) / 0.9);
+    border: 3px solid hsl(var(--hud-border));
+    border-radius: 12px;
+    padding: 8px 4px;
+    color: hsl(var(--foreground));
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .raider-nav-arrow:hover {
+    border-color: hsl(var(--primary) / 0.6);
+    color: hsl(var(--primary));
+  }
+
+  .xp-bar {
+    width: 100%;
+    height: 10px;
+    background: hsl(var(--slot-bg));
+    border: 2px solid hsl(var(--slot-border));
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .xp-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+
+  .dot-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid hsl(var(--muted-foreground));
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .dot-active {
+    background: hsl(var(--primary));
+    border-color: hsl(var(--primary));
+    box-shadow: 0 0 6px hsl(var(--primary) / 0.5);
+  }
+
+  .skill-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 4px;
+    border-radius: 10px;
+    border: 3px solid hsl(var(--slot-border));
+    background: hsl(var(--slot-bg));
+    box-shadow: inset 0 2px 4px hsl(0 0% 0% / 0.3);
+    transition: all 0.15s ease;
+  }
+
+  .skill-unlocked {
+    box-shadow: inset 0 2px 4px hsl(0 0% 0% / 0.3), 0 0 8px hsl(var(--accent) / 0.2);
+  }
+
+  .skill-locked {
+    opacity: 0.6;
+  }
 }
