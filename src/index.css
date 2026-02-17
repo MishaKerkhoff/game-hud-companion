@@ -259,6 +259,7 @@
     border: 4px solid hsl(var(--hud-border));
     border-radius: 16px;
     box-shadow: none;
+    overflow: hidden;
   }
 
   .raider-card-selected {

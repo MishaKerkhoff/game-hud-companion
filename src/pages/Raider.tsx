@@ -95,7 +95,7 @@ export default function RaiderPage() {
 
                     {/* Rarity accent bar */}
                     <div
-                      className="h-2 rounded-t-[12px] -mx-[1px] -mt-[1px]"
+                      className="h-2 rounded-t-[12px]"
                       style={{ background: `hsl(${rc})` }} />
 
 
