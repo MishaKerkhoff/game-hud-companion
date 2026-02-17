@@ -83,7 +83,7 @@ export default function RaiderPage() {
               return (
                 <div
                   key={raider.id}
-                  className="flex-[0_0_85%] min-w-0 px-2"
+                  className="flex-[0_0_55%] min-w-0 px-2"
                 >
                   <div
                     className={cn(
