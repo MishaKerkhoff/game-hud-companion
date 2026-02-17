@@ -63,7 +63,7 @@ export default function RaiderPage() {
       </div>
 
       {/* Carousel area */}
-      <div className="relative w-full flex items-center text-transparent">
+      <div className="relative w-full flex items-center">
         {/* Prev arrow */}
         <button
           onClick={scrollPrev}
@@ -73,7 +73,7 @@ export default function RaiderPage() {
         </button>
 
         {/* Embla viewport */}
-        <div className="overflow-hidden flex-1 mx-[8px] my-[8px] bg-transparent text-transparent" ref={emblaRef}>
+        <div className="overflow-hidden flex-1 mx-2 bg-transparent" ref={emblaRef}>
           <div className="flex py-2">
             {raiders.map((raider, idx) => {
               const Icon = iconMap[raider.icon] || Crosshair;
