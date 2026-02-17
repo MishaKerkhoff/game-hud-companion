@@ -351,6 +351,7 @@
     color: white !important;
     box-shadow: none !important;
     border: 2px solid hsl(var(--hud-border)) !important;
+    border-bottom: 2px solid var(--tab-color) !important;
   }
 
   .skill-tab[data-state="inactive"] {
