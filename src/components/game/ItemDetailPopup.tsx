@@ -56,9 +56,9 @@ export function ItemDetailPopup({ slot, source, onClose, onEquip, onSell, onRecy
 
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 w-8 h-8 rounded-lg bg-muted border-[3px] border-border flex items-center justify-center hover:border-destructive transition-colors z-10"
+          className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-md bg-red-500/20 border border-red-500/50 text-red-500 hover:bg-red-500/30 hover:text-red-400 transition-colors z-10"
         >
-          <X size={16} strokeWidth={3} className="text-foreground" />
+          <X size={18} strokeWidth={3} />
         </button>
 
         <div className="p-5 pt-4">

@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
-import { ChevronLeft, ChevronRight, Gift, CheckCircle } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Gift, CheckCircle, X } from 'lucide-react';
 import { icons } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TRADERS, Trader } from '@/data/sample-traders';
@@ -245,10 +245,10 @@ function ShopPopup({
             </span>
           </div>
           <button
-            className="font-game text-lg text-destructive game-outline leading-none px-1"
+            className="w-8 h-8 flex items-center justify-center rounded-md bg-red-500/20 border border-red-500/50 text-red-500 hover:bg-red-500/30 hover:text-red-400 transition-colors"
             onClick={onClose}
           >
-            ✕
+            <X size={18} strokeWidth={3} />
           </button>
         </div>
 
