@@ -70,7 +70,7 @@ export default function Craft() {
               {CRAFTING_BENCHES.map((bench, idx) => {
                 const isActive = idx === selectedIndex;
                 return (
-                  <div key={bench.id} className="flex-[0_0_22%] min-w-0 px-1.5">
+                  <div key={bench.id} className="flex-[0_0_11%] min-w-0 px-1">
                     <BenchCard bench={bench} isActive={isActive} />
                   </div>
                 );
@@ -134,25 +134,25 @@ function BenchCard({ bench, isActive }: { bench: CraftingBench; isActive: boolea
   return (
     <div
       className={cn(
-        'bench-card flex flex-col items-center justify-center gap-1 aspect-square transition-all duration-300',
+        'bench-card flex flex-col items-center justify-center gap-0.5 aspect-square transition-all duration-300',
         isActive ? 'scale-105 opacity-100 bench-card-active' : 'scale-90 opacity-50',
       )}
       style={{ '--bench-color': `hsl(${rc})` } as React.CSSProperties}
     >
       <div
-        className="w-12 h-12 rounded-xl border-[3px] flex items-center justify-center slot-base"
+        className="w-8 h-8 rounded-lg border-2 flex items-center justify-center slot-base"
         style={{
           borderColor: isActive ? `hsl(${rc})` : undefined,
-          boxShadow: isActive ? `0 0 12px hsl(${rc} / 0.4)` : undefined,
+          boxShadow: isActive ? `0 0 8px hsl(${rc} / 0.4)` : undefined,
         }}
       >
-        {BenchIcon && <BenchIcon size={24} style={{ color: `hsl(${rc})` }} />}
+        {BenchIcon && <BenchIcon size={16} style={{ color: `hsl(${rc})` }} />}
       </div>
-      <span className="font-game text-[10px] text-foreground game-outline uppercase leading-tight">
+      <span className="font-game text-[7px] text-foreground game-outline uppercase leading-tight">
         {bench.name}
       </span>
       <span
-        className="font-game text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded"
+        className="font-game text-[6px] uppercase tracking-wider px-1 py-0.5 rounded"
         style={{
           background: `hsl(${rc} / 0.2)`,
           color: `hsl(${rc})`,

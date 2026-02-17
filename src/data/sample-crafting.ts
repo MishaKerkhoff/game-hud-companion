@@ -126,6 +126,74 @@ export const CRAFTING_BENCHES: CraftingBench[] = [
       },
     ],
   },
+  {
+    id: 'explosives',
+    name: 'Explosives',
+    icon: 'Bomb',
+    level: 2,
+    rarity: 'rare',
+    recipes: [
+      {
+        itemId: 'grenade',
+        materials: [
+          { itemId: 'scrap_metal', count: 4 },
+          { itemId: 'chemicals', count: 3 },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'optics',
+    name: 'Optics',
+    icon: 'Eye',
+    level: 2,
+    rarity: 'epic',
+    recipes: [
+      {
+        itemId: 'scope',
+        materials: [
+          { itemId: 'scrap_metal', count: 5 },
+          { itemId: 'weapon_parts', count: 8 },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'salvage',
+    name: 'Salvage',
+    icon: 'Wrench',
+    level: 1,
+    rarity: 'common',
+    recipes: [
+      {
+        itemId: 'scrap_metal',
+        materials: [
+          { itemId: 'cloth', count: 3 },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'chemistry',
+    name: 'Chemistry',
+    icon: 'FlaskConical',
+    level: 3,
+    rarity: 'legendary',
+    recipes: [
+      {
+        itemId: 'chemicals',
+        materials: [
+          { itemId: 'scrap_metal', count: 2 },
+        ],
+      },
+      {
+        itemId: 'energy_drink',
+        materials: [
+          { itemId: 'chemicals', count: 2 },
+        ],
+      },
+    ],
+  },
 ];
 
 // Mock "have" counts for materials (simulating player inventory)
