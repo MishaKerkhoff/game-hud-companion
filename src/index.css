@@ -263,7 +263,7 @@
 
   .raider-card-selected {
     border-color: hsl(var(--slot-active));
-    box-shadow: 0 0 20px hsl(var(--slot-active) / 0.4), 0 6px 30px hsl(0 0% 0% / 0.5);
+    box-shadow: none;
   }
 
   .raider-avatar {
