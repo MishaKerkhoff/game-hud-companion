@@ -227,7 +227,7 @@ function ShopPopup({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
       <div className="absolute inset-0 bg-black/60" />
       <div
-        className="relative raider-card w-full max-w-sm max-h-[80vh] flex flex-col"
+        className="relative raider-card w-full max-w-sm max-h-[80vh] flex flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -253,7 +253,7 @@ function ShopPopup({
         </div>
 
         {/* Content */}
-        <ScrollArea className="flex-1 min-h-0 max-h-[60vh] p-3">
+        <ScrollArea className="flex-1 min-h-0 p-3">
           {type === 'inventory' ? (
             <div className="grid grid-cols-3 gap-1.5">
               {trader.inventory.map((slot, i) => (
