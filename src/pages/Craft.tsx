@@ -71,7 +71,9 @@ export default function Craft() {
                 const isActive = idx === selectedIndex;
                 return (
                   <div key={bench.id} className="min-w-0 px-1" style={{ flex: '0 0 90px' }}>
-                    <BenchCard bench={bench} isActive={isActive} />
+                    <div onClick={() => emblaApi?.scrollTo(idx)} className="cursor-pointer">
+                      <BenchCard bench={bench} isActive={isActive} />
+                    </div>
                   </div>
                 );
               })}
