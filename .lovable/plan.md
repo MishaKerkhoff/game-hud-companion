@@ -1,25 +1,26 @@
 
 
-# Fix Text Readability -- Dark Text on Light Background
+# Update Slot/Stat/Skill Background Color to #F2FBFF
 
-## Problem
-The main text color (`--foreground`) is still the light beige `#D8D2C2`, which is nearly invisible on the light `#F5F7FA` background and beige `#D8D2C2` card panels.
+## What Changes
 
-## Change
+A single CSS variable update in `src/index.css`:
 
-**File: `src/index.css`** -- Update these CSS variables:
-
-| Variable | Current (HSL) | New (HSL) | Reason |
+| Variable | Current Value | New Value | Effect |
 |----------|--------------|-----------|--------|
-| `--foreground` | `40 18% 82%` (light beige) | `60 14% 8%` (#181812) | Main body text |
-| `--popover-foreground` | `40 18% 82%` | `60 14% 8%` | Popover text |
-| `--secondary-foreground` | `40 18% 82%` | `60 14% 8%` | Secondary element text |
-| `--destructive-foreground` | `40 18% 82%` | `60 14% 8%` | Destructive button text |
-| `--muted-foreground` | `42 8% 50%` | `42 8% 40%` | Slightly darker for better contrast |
+| `--slot-bg` | `52 12% 12%` (dark brown) | `204 100% 97%` (#F2FBFF, light ice blue) | Changes background of item slots, stat blocks, skill nodes, raider avatars, XP bars, and scrap result items |
 
-**Not changed** (stays yellow/amber):
-- `--primary` remains `30 100% 64%` (Phosphor Amber) -- all yellow text using `text-primary` stays as-is
-- `--primary-foreground` stays dark (text ON primary-colored backgrounds)
+This one variable controls the background for all the elements you mentioned:
+- Item inventory slots (`.slot-base`)
+- Raider stat blocks (`.stat-block`)
+- Skill tree nodes (`.skill-node`)
+- Item detail stat blocks
+- Scrap result items
+- Raider avatars and XP bars
 
-This is a single-file change affecting only CSS variable values. All components referencing `text-foreground`, `text-muted-foreground`, etc. will automatically pick up the dark color, while anything using `text-primary` keeps its amber/yellow appearance.
+## Technical Detail
+
+**File: `src/index.css`, line 53** -- change `--slot-bg: 52 12% 12%` to `--slot-bg: 204 100% 97%`
+
+The `--slot-border` may also need adjusting since the current dark border (`48 10% 21%`) might look too harsh against the light background. I will update it to a softer complementary border color like `204 30% 85%` to keep things cohesive.
 
