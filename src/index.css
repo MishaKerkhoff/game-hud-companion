@@ -83,7 +83,7 @@
   }
 
   .game-outline {
-    -webkit-text-stroke: 0.3px hsl(220 20% 10% / 0.4);
+    -webkit-text-stroke: 0.7px hsl(220 20% 10% / 0.5);
     paint-order: stroke fill;
   }
 
