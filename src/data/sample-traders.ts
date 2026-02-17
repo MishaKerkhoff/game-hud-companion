@@ -92,6 +92,11 @@ export const TRADERS: Trader[] = [
       createSlot('energy_drink', 5),
       createSlot('shotgun'),
       createSlot('shield_item'),
+      createSlot('medkit', 3),
+      createSlot('ammo_rifle', 60),
+      createSlot('backpack_item'),
+      createSlot('chemicals', 10),
+      createSlot('weapon_parts', 15),
     ],
   },
 ];
