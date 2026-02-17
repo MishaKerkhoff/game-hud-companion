@@ -160,9 +160,9 @@ export default function RaiderPage() {
 
                       {/* Select button */}
                       <button
-                        className={cn(
+                         className={cn(
                           'popup-btn w-full',
-                          raider.selected ? 'popup-btn-cancel' : 'popup-btn-sell'
+                          raider.selected ? 'popup-btn-sell' : 'popup-btn-cancel'
                         )}
                         onClick={(e) => {
                           e.stopPropagation();
