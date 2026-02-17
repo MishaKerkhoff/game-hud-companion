@@ -136,7 +136,7 @@ export default function RaiderDetail({ raider, onClose }: Props) {
             {/* RIGHT COLUMN – Skill Trees */}
             <div className="flex flex-col h-full">
               <Tabs defaultValue="offense" className="w-full flex flex-col flex-1">
-                <TabsList className="w-full bg-transparent rounded-none p-0 h-auto gap-1 border-b-0">
+                <TabsList className="w-full bg-transparent rounded-none p-0 h-auto gap-0 border-b-0">
                   {SKILL_TABS.map((tab, i) => {
                     const tabColors = [
                       '#4DE94C',
