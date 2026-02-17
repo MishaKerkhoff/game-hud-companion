@@ -79,7 +79,7 @@ function GridContent() {
       </nav>
 
       {/* Row 2, Col 2: Center Content */}
-      <div className="relative z-10 px-2 md:px-4 min-h-0 overflow-hidden">
+      <div className="relative z-20 px-2 md:px-4 min-h-0 overflow-hidden">
         <Outlet />
       </div>
 
