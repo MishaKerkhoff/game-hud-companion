@@ -152,7 +152,7 @@ export default function Stash() {
       </MenuRailSlot>
 
       {/* Stash Grid (center content) */}
-      <div className="w-full flex overflow-hidden">
+      <div className="w-full flex overflow-hidden rounded-xl">
         <div className="hud-panel p-3 flex flex-col min-h-0 overflow-hidden w-full">
           {/* Header */}
           <div className="flex items-center justify-between mb-2">
