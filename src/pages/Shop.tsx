@@ -164,8 +164,8 @@ function TraderCard({
       {/* Divider */}
       <div className="h-[2px] bg-border/50 mx-3 shrink-0" />
 
-      {/* Scrollable item grid */}
-      <ScrollArea className="flex-1 min-h-0 p-3">
+      {/* Scrollable item grid — show 4 rows (12 items) then scroll */}
+      <ScrollArea className="flex-1 min-h-0 max-h-[15.5rem] p-3">
         <div className="grid grid-cols-3 gap-1.5">
           {trader.inventory.map((slot, i) => (
             <InventorySlotUI
