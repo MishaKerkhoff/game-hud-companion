@@ -1,80 +1,156 @@
 
 
-# Item Detail Popup on Click
+# Raider Page: Character Select Carousel + Detail View
 
 ## Overview
-Add a popup modal that appears when clicking any item in the inventory/stash. It shows the item's stats, description, and icon in a bold "Brawl Stars" vector UI style -- chunky panels, thick outlines, candy-saturated colors, all-caps headers, and numbers as the visual anchor.
+Replace the current "Raider Stats" placeholder with a full Raider selection page. The main view shows a horizontal carousel of Raider cards that players swipe through. Clicking a card opens a detailed Raider stats/skills page. The nav rail label changes from "Stats" to "Raider".
 
-## Changes
+## Data Model
 
-### 1. Extend `GameItem` type (`src/types/game.ts`)
-Add optional fields to support the detail popup:
-- `description?: string` -- flavor text
-- `stats?: Record<string, string | number>` -- key-value stat pairs (e.g. DMG: 13, Fire Rate: 13.5)
-- `sellValue?: number` -- currency value for a future sell button
+### New type: `Raider` (`src/types/raider.ts`)
+```text
+Raider {
+  id: string
+  name: string
+  role: string               // e.g. "DAMAGE DEALER", "TANK", "SUPPORT"
+  icon: string               // Lucide icon name for avatar
+  rarity: common | uncommon | rare | epic | legendary
+  level: number              // 1-11
+  xp: number
+  xpMax: number
+  description: string        // Flavor text
+  stats: {
+    health: number
+    attack: string            // e.g. "5 x 510"
+    super: string             // e.g. "SUPER SHELL"
+    speed: number
+    defense: number
+  }
+  skills: Skill[]             // Skill tree nodes
+  selected: boolean
+}
 
-### 2. Add descriptions and stats to items (`src/data/sample-items.ts`)
-Populate each item with a short description and relevant stats. For example:
-- Assault Rifle: description "High accuracy service weapon", stats: { DMG: 13, "Fire Rate": 13.5, "Mag Size": 30 }
-- Med Kit: description "Restores health over time", stats: { "Heal Amount": 75, "Use Time": "5s" }
-- Ammo items: stats for caliber and quantity per stack
-
-### 3. Create `ItemDetailPopup` component (`src/components/game/ItemDetailPopup.tsx`)
-A centered overlay modal triggered on item click. Layout inspired by the reference images:
-
+Skill {
+  id: string
+  name: string
+  icon: string
+  description: string
+  unlocked: boolean
+  level: number               // required raider level
+}
 ```
+
+### Sample data: `src/data/sample-raiders.ts`
+4-5 pre-built raiders with different roles, stats, and skill trees (e.g. "RECON", "BREACHER", "MEDIC", "HEAVY", "GHOST").
+
+## Page Structure
+
+### Carousel View (`src/pages/Raider.tsx`)
+The default view when navigating to `/stats`. Uses the MenuLayout grid (center content + optional right rail).
+
+```text
+Center Content:
++----------------------------------------------+
+|  RAIDERS  3/5                                 |
+|                                               |
+|  [< ]  +------------------+  [> ]             |
+|         |  ============== |                   |
+|         |  [ ICON AVATAR ]|                   |
+|         |     RECON       |                   |
+|         |  DMG DEALER     |                   |
+|         |  Lv. 7  126/140 |                   |
+|         |  [HP] [ATK] [SPD]|                  |
+|         |  [=SELECT=]     |                   |
+|         +------------------+                  |
+|                                               |
+|        o  o  (o)  o  o    (dot indicators)    |
++----------------------------------------------+
+```
+
+Each card:
+- Rarity-colored top accent bar
+- Large centered Lucide icon as the raider avatar (inside a colored circle)
+- Name in large all-caps font-game
+- Role subtitle (e.g. "DAMAGE DEALER")
+- Level badge with XP progress bar
+- 3 mini stat blocks (Health, Attack, Speed) in a row
+- "SELECT" button (yellow, chunky) on the currently viewed card
+- Selected card has a glowing border
+
+### Raider Detail View (`src/components/game/RaiderDetail.tsx`)
+Opens when clicking on a raider card (not the SELECT button). Rendered as a full overlay popup similar to `ItemDetailPopup`.
+
+```text
 +-----------------------------------------------+
-|  [X]   ASSAULT RIFLE            (rarity badge) |
-|                                                 |
-|        [ Large Item Icon ]                      |
-|        3.5 kg                                   |
-|        "High accuracy service weapon..."        |
-|                                                 |
-|  +-------------------+  +-------------------+  |
-|  | DMG               |  | FIRE RATE         |  |
-|  |     13            |  |     13.5          |  |
-|  +-------------------+  +-------------------+  |
-|  +-------------------+  +-------------------+  |
-|  | MAG SIZE          |  | WEIGHT            |  |
-|  |     30            |  |     3.5 kg        |  |
-|  +-------------------+  +-------------------+  |
-|                                                 |
-|  Category: Weapon    |  Stack: 1/1             |
+|  [<Back]    RECON                  (rarity)    |
+|                                                |
+|  [ Large Avatar Icon ]                         |
+|  DAMAGE DEALER                                 |
+|  "Silent and deadly operative..."              |
+|                                                |
+|  POWER ========== Lv 7 / MAX 11               |
+|                                                |
+|  +--------+ +--------+ +--------+ +--------+  |
+|  | HEALTH | | ATTACK | | SUPER  | | SPEED  |  |
+|  | 6630   | | 5x510  | | SHELL  | |  820   |  |
+|  +--------+ +--------+ +--------+ +--------+  |
+|                                                |
+|  SKILLS                                        |
+|  [Skill1 unlocked] [Skill2 unlocked] [Locked]  |
+|  [Locked]          [Locked]          [Locked]   |
 +-------------------------------------------------+
 ```
 
-Visual style:
-- Dark semi-transparent backdrop, click outside to close
-- Main panel uses `hud-panel` base with extra thick border (4px)
-- Rarity-colored top accent bar matching the item's rarity
-- Item name in `font-game` uppercase, large
-- Stat blocks are individual rounded panels with colored labels (candy blue headers, large white values)
-- Numbers are 2-3x the size of their labels
-- Weight shown with icon
-- Category and stack info at bottom
-- Close button (X) in top-right, thick and chunky
+## Visual Style (Brawl Stars aesthetic)
+- Raider cards: `popup-panel` style with 4px borders, rarity-colored accent bars
+- Avatar: Large Lucide icon inside a colored circular container with thick border
+- Stat blocks: Reuse existing `.stat-block` / `.stat-label` / `.stat-value` classes
+- SELECT button: Yellow chunky `.popup-btn .popup-btn-sell` style
+- Carousel navigation: Chunky arrow buttons with thick borders
+- Dot indicators: Filled circle for active, outlined for inactive
+- Skill nodes: Rounded panels, green border if unlocked, grey/locked with lock icon if not
+- Level/XP bar: Thick rounded progress bar with rarity-colored fill
 
-### 4. Add popup state to `Stash` page (`src/pages/Stash.tsx`)
-- Add `selectedSlot` state (`InventorySlot | null`)
-- On item click (not drag), set `selectedSlot`
-- Render `ItemDetailPopup` when `selectedSlot` is set
-- Close on backdrop click or X button
+## Changes
 
-### 5. Update `InventorySlotUI` (`src/components/game/InventorySlotUI.tsx`)
-- Add an optional `onItemClick?: (slot: InventorySlot) => void` prop
-- On click, if the item exists and `onItemClick` is provided, call it instead of the existing `onClick`
-- Drag behavior remains unchanged (drag start requires hold + move)
+### 1. `src/types/raider.ts` (new)
+Define `Raider` and `Skill` interfaces.
 
-### 6. Add popup styles to `src/index.css`
-- `.stat-block` class: rounded panel with inset shadow, thick border, for individual stat cells
-- Rarity accent color utilities for the popup header bar
-- Large number typography utility
+### 2. `src/data/sample-raiders.ts` (new)
+5 sample raiders with varied stats and 3-6 skills each.
+
+### 3. `src/pages/Raider.tsx` (new)
+Main page with horizontal carousel using Embla (already installed as `embla-carousel-react`). Features:
+- Carousel of raider cards with prev/next arrows
+- Dot indicators
+- Click card to open detail overlay
+- SELECT button to mark active raider
+- Uses `MenuRailSlot` for right rail (optional raider summary or empty)
+
+### 4. `src/components/game/RaiderDetail.tsx` (new)
+Full-screen overlay popup showing detailed stats and skill tree grid. Back button returns to carousel.
+
+### 5. `src/components/game/MenuLayout.tsx` (edit)
+Change nav item label from "Stats" to "Raider" and icon from `BarChart3` to `User` (or `Swords`).
+
+### 6. `src/App.tsx` (edit)
+- Import `Raider` page instead of `PlaceholderPage` for `/stats` route
+- Update route element
+
+### 7. `src/index.css` (edit)
+Add raider-specific utility classes:
+- `.raider-card` -- card panel styling
+- `.raider-avatar` -- circular icon container
+- `.skill-node` / `.skill-locked` -- skill tree node styles
+- `.xp-bar` -- thick XP progress bar
+- `.dot-indicator` / `.dot-active` -- carousel dots
 
 ## Files Changed
-1. `src/types/game.ts` -- add optional fields
-2. `src/data/sample-items.ts` -- populate descriptions/stats
-3. `src/components/game/ItemDetailPopup.tsx` -- new component
-4. `src/components/game/InventorySlotUI.tsx` -- add onItemClick prop
-5. `src/pages/Stash.tsx` -- wire up popup state
-6. `src/index.css` -- stat block styles
+1. `src/types/raider.ts` -- new types
+2. `src/data/sample-raiders.ts` -- sample data
+3. `src/pages/Raider.tsx` -- main carousel page
+4. `src/components/game/RaiderDetail.tsx` -- detail overlay
+5. `src/components/game/MenuLayout.tsx` -- rename nav item
+6. `src/App.tsx` -- update route
+7. `src/index.css` -- new utility classes
 
