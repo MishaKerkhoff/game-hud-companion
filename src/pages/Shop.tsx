@@ -77,7 +77,14 @@ export default function Shop() {
               {TRADERS.map((trader, idx) => {
                 const isActive = idx === selectedIndex;
                 return (
-                  <div key={trader.id} className="flex-[0_0_55%] min-w-0 px-2 h-full">
+                  <div
+                    key={trader.id}
+                    className="flex-[0_0_55%] min-w-0 px-2 h-full cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      emblaApi?.scrollTo(idx);
+                    }}
+                  >
                     <TraderCard
                       trader={trader}
                       isActive={isActive}
