@@ -253,7 +253,8 @@ function ShopPopup({
         </div>
 
         {/* Content */}
-        <ScrollArea className="flex-1 min-h-0 p-3">
+        <div className="flex-1 min-h-0 overflow-hidden">
+        <ScrollArea className="h-full p-3">
           {type === 'inventory' ? (
             <div className="grid grid-cols-3 gap-1.5">
               {trader.inventory.map((slot, i) => (
@@ -279,6 +280,7 @@ function ShopPopup({
             </div>
           )}
         </ScrollArea>
+        </div>
       </div>
     </div>
   );
