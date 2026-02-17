@@ -97,6 +97,9 @@ export const TRADERS: Trader[] = [
       createSlot('backpack_item'),
       createSlot('chemicals', 10),
       createSlot('weapon_parts', 15),
+      createSlot('ammo_shotgun', 30),
+      createSlot('bandage', 10),
+      createSlot('scrap_metal', 20),
     ],
   },
 ];
