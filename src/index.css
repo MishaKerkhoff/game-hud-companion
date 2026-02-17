@@ -363,4 +363,28 @@
     border-bottom: 2px solid color-mix(in srgb, var(--active-tab-color) 35%, transparent) !important;
     -webkit-text-stroke: 0.5px hsl(220 20% 10% / 0.4);
   }
+
+  /* Bench cards */
+  .bench-card {
+    padding: 10px 6px;
+    border-radius: 12px;
+    border: 3px solid hsl(var(--hud-border));
+    background: hsl(var(--hud-panel) / 0.85);
+  }
+
+  .bench-card-active {
+    border-color: var(--bench-color);
+    box-shadow: 0 0 14px color-mix(in srgb, var(--bench-color) 40%, transparent);
+  }
+
+  /* Craft button */
+  .popup-btn-craft {
+    background: hsl(200 70% 45%);
+    border-color: hsl(200 80% 30%);
+    color: hsl(var(--foreground));
+  }
+
+  .popup-btn-craft:hover:not(:disabled) {
+    background: hsl(200 70% 50%);
+  }
 }
