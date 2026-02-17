@@ -1,5 +1,7 @@
 export type Rarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
 
+export type SkillCategory = 'offense' | 'defense' | 'utility';
+
 export interface Skill {
   id: string;
   name: string;
@@ -7,6 +9,7 @@ export interface Skill {
   description: string;
   unlocked: boolean;
   level: number; // required raider level to unlock
+  category: SkillCategory;
 }
 
 export interface Raider {
