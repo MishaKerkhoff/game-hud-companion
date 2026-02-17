@@ -7,11 +7,11 @@ interface ItemIconProps {
 }
 
 const rarityColor: Record<string, string> = {
-  common: 'hsl(0 0% 70%)',
-  uncommon: 'hsl(120 60% 50%)',
-  rare: 'hsl(210 80% 55%)',
-  epic: 'hsl(280 70% 60%)',
-  legendary: 'hsl(45 100% 55%)',
+  common: 'hsl(40 18% 82%)',
+  uncommon: 'hsl(120 82% 53%)',
+  rare: 'hsl(207 27% 47%)',
+  epic: 'hsl(330 61% 52%)',
+  legendary: 'hsl(30 100% 64%)',
 };
 
 export function ItemIcon({ item, size = 24 }: ItemIconProps) {

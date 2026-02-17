@@ -21,7 +21,7 @@ function GridContent() {
   return (
     <div
       className="w-screen h-screen overflow-hidden select-none grid grid-rows-[auto_auto_1fr] grid-cols-[auto_1fr_auto]"
-      style={{ background: 'radial-gradient(ellipse at 50% 40%, hsl(220 25% 18%), hsl(220 20% 8%))' }}
+      style={{ background: 'radial-gradient(ellipse at 50% 40%, hsl(55 12% 14%), hsl(60 14% 6%))' }}
     >
       {/* Decorative grid overlay */}
       <div
