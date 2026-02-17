@@ -54,11 +54,6 @@ export default function RaiderDetail({ raider, onClose }: Props) {
         {/* Rarity bar */}
         <div className="h-2 rounded-t-[12px] -mx-[1px] -mt-[1px]" style={{ background: `hsl(${rc})` }} />
 
-        {/* Close X */}
-        <button onClick={onClose} className="absolute top-3 right-3 z-10 text-red-500 hover:text-red-400 transition-colors">
-          <X size={22} />
-        </button>
-
         <div className="p-5 space-y-4">
           {/* Header */}
           <div className="flex items-center gap-3">
@@ -66,6 +61,12 @@ export default function RaiderDetail({ raider, onClose }: Props) {
             <span className={cn('font-game text-[10px] game-outline uppercase px-2 py-1 rounded-lg', `rarity-badge-${raider.rarity}`)}>
               {raider.rarity}
             </span>
+            <button
+              onClick={onClose}
+              className="w-8 h-8 flex items-center justify-center rounded-md bg-red-500/20 border border-red-500/50 text-red-500 hover:bg-red-500/30 hover:text-red-400 transition-colors"
+            >
+              <X size={18} strokeWidth={3} />
+            </button>
           </div>
 
           {/* Two-column layout */}
