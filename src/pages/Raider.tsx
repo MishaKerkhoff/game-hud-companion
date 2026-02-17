@@ -151,15 +151,15 @@ export default function RaiderPage() {
                       <div className="grid grid-cols-3 gap-2 w-full">
                         <div className="stat-block text-center">
                           <span className="stat-label"><Heart size={10} className="inline mr-0.5" />HP</span>
-                          <span className="stat-value text-sm">{raider.stats.health}</span>
+                          <span className="stat-value text-[10.5px]">{raider.stats.health}</span>
                         </div>
                         <div className="stat-block text-center">
                           <span className="stat-label"><Swords size={10} className="inline mr-0.5" />ATK</span>
-                          <span className="stat-value text-sm">{raider.stats.attack}</span>
+                          <span className="stat-value text-[10.5px]">{raider.stats.attack}</span>
                         </div>
                         <div className="stat-block text-center">
                           <span className="stat-label"><Gauge size={10} className="inline mr-0.5" />SPD</span>
-                          <span className="stat-value text-sm">{raider.stats.speed}</span>
+                          <span className="stat-value text-[10.5px]">{raider.stats.speed}</span>
                         </div>
                       </div>
 
