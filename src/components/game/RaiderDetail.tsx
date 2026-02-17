@@ -67,7 +67,7 @@ export default function RaiderDetail({ raider, onClose }: Props) {
           </div>
 
           {/* Two-column layout */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:items-stretch">
             {/* LEFT COLUMN – Stats */}
             <div className="space-y-4">
               {/* Avatar + Role */}
@@ -131,31 +131,37 @@ export default function RaiderDetail({ raider, onClose }: Props) {
             </div>
 
             {/* RIGHT COLUMN – Skill Trees */}
-            <div>
-              <Tabs defaultValue="offense" className="w-full">
-                <TabsList className="w-full bg-transparent border-b-2 border-border rounded-none p-0 h-auto gap-0">
-                  {SKILL_TABS.map((tab) => (
-                    <TabsTrigger
-                      key={tab.value}
-                      value={tab.value}
-                      className={cn(
-                        'font-game text-[10px] game-outline uppercase flex-1 rounded-t-lg rounded-b-none px-3 py-2',
-                        'border-2 border-b-0 border-transparent',
-                        'data-[state=active]:border-current data-[state=active]:bg-card/60',
-                        'data-[state=inactive]:text-muted-foreground data-[state=inactive]:bg-transparent',
-                        'transition-colors shadow-none',
-                      )}
-                      style={{ color: `hsl(${rc})` }}
-                    >
-                      {tab.label}
-                    </TabsTrigger>
-                  ))}
+            <div className="flex flex-col h-full">
+              <Tabs defaultValue="offense" className="w-full flex flex-col flex-1">
+                <TabsList className="w-full bg-transparent rounded-none p-0 h-auto gap-1 border-b-0">
+                  {SKILL_TABS.map((tab, i) => {
+                    const tabColors = [
+                      `hsl(${rc})`,           // offense - rarity color
+                      'hsl(var(--muted))',     // defense - muted
+                      'hsl(var(--accent))',    // utility - accent
+                    ];
+                    return (
+                      <TabsTrigger
+                        key={tab.value}
+                        value={tab.value}
+                        className="skill-tab font-game text-[10px] game-outline uppercase flex-1 rounded-t-lg rounded-b-none px-3 py-2 border-0 transition-all shadow-none"
+                        style={{ '--tab-color': tabColors[i] } as React.CSSProperties}
+                      >
+                        {tab.label}
+                      </TabsTrigger>
+                    );
+                  })}
                 </TabsList>
 
-                {SKILL_TABS.map((tab) => {
+                {SKILL_TABS.map((tab, i) => {
+                  const tabColors = [
+                    `hsl(${rc})`,
+                    'hsl(var(--muted))',
+                    'hsl(var(--accent))',
+                  ];
                   const skills = skillsByCategory(tab.value);
                   return (
-                    <TabsContent key={tab.value} value={tab.value} className="mt-0 border-2 border-t-0 border-border rounded-b-lg p-3 max-h-64 overflow-y-auto">
+                    <TabsContent key={tab.value} value={tab.value} className="mt-0 border-2 border-t-0 border-border rounded-b-lg p-3 flex-1 overflow-y-auto">
                       {skills.length > 0 ? (
                         <div className="grid grid-cols-3 gap-2">
                           {skills.map((skill) => (

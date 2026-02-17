@@ -343,4 +343,15 @@
   .skill-locked {
     opacity: 0.6;
   }
+
+  .skill-tab[data-state="active"] {
+    background: var(--tab-color) !important;
+    color: hsl(var(--background)) !important;
+    box-shadow: none !important;
+  }
+
+  .skill-tab[data-state="inactive"] {
+    background: transparent !important;
+    color: hsl(var(--muted-foreground)) !important;
+  }
 }
