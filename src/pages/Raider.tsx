@@ -83,7 +83,8 @@ export default function RaiderPage() {
               return (
                 <div
                   key={raider.id}
-                  className="flex-[0_0_55%] min-w-0 px-2 cursor-pointer"
+                  className="min-w-0 px-2 cursor-pointer"
+                  style={{ flex: '0 0 280px' }}
                   onClick={(e) => {
                     e.stopPropagation();
                     emblaApi?.scrollTo(idx);

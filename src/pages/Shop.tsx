@@ -79,7 +79,8 @@ export default function Shop() {
                 return (
                   <div
                     key={trader.id}
-                    className="flex-[0_0_55%] min-w-0 px-2 h-full cursor-pointer"
+                    className="min-w-0 px-2 h-full cursor-pointer"
+                    style={{ flex: '0 0 280px' }}
                     onClick={(e) => {
                       e.stopPropagation();
                       emblaApi?.scrollTo(idx);
