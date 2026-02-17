@@ -63,7 +63,7 @@ export default function Shop() {
         </div>
 
         {/* Carousel area */}
-        <div className="relative w-full flex items-start flex-1 min-h-0 hud-panel p-2">
+        <div className="relative w-full flex items-start flex-1 min-h-0 p-2">
           {/* Prev arrow */}
           <button onClick={scrollPrev} className="raider-nav-arrow shrink-0 mt-16">
             <ChevronLeft size={28} />
@@ -133,8 +133,8 @@ function TraderCard({
   return (
     <div
       className={cn(
-        'raider-card flex flex-col h-full transition-all duration-200',
-        isActive && 'scale-[1.02]',
+        'raider-card flex flex-col h-full transition-all duration-300',
+        isActive ? 'scale-[1.08] opacity-100' : 'scale-[0.85] opacity-60',
       )}
     >
       {/* Rarity accent bar */}
