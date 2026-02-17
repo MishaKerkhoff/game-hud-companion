@@ -1,6 +1,6 @@
 import {
-  Crosshair, Shield, HeartPulse, Bomb, Ghost,
-  ArrowLeft, Heart, Swords, Gauge, ShieldHalf, Zap, Lock,
+  Crosshair, Shield, HeartPulse, Bomb, Ghost, X,
+  Heart, Swords, Gauge, ShieldHalf, Zap, Lock,
   Eye, Footprints, Target, ShieldOff,
   Megaphone, BrickWall, Castle, Flame,
   Plus, RotateCcw, Pill, Sparkles,
@@ -49,17 +49,19 @@ export default function RaiderDetail({ raider, onClose }: Props) {
     raider.skills.filter((s) => s.category === cat);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 animate-fade-in p-4">
-      <div className="popup-panel w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 animate-fade-in p-4" onClick={onClose}>
+      <div className="popup-panel w-full max-w-3xl max-h-[90vh] overflow-y-auto relative" onClick={(e) => e.stopPropagation()}>
         {/* Rarity bar */}
         <div className="h-2 rounded-t-[12px] -mx-[1px] -mt-[1px]" style={{ background: `hsl(${rc})` }} />
+
+        {/* Close X */}
+        <button onClick={onClose} className="absolute top-3 right-3 z-10 text-red-500 hover:text-red-400 transition-colors">
+          <X size={22} />
+        </button>
 
         <div className="p-5 space-y-4">
           {/* Header */}
           <div className="flex items-center gap-3">
-            <button onClick={onClose} className="popup-btn popup-btn-cancel p-2 !px-3">
-              <ArrowLeft size={18} />
-            </button>
             <h2 className="font-game text-xl text-foreground game-outline flex-1">{raider.name}</h2>
             <span className={cn('font-game text-[10px] game-outline uppercase px-2 py-1 rounded-lg', `rarity-badge-${raider.rarity}`)}>
               {raider.rarity}
