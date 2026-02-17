@@ -1,12 +1,15 @@
 import { useState, useCallback, useEffect } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Gift, CheckCircle } from 'lucide-react';
 import { icons } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { TRADERS, Trader } from '@/data/sample-traders';
+import { TRADER_QUESTS, TraderQuest } from '@/data/sample-quests';
 import { InventorySlotUI } from '@/components/game/InventorySlotUI';
 import { ItemDetailPopup } from '@/components/game/ItemDetailPopup';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Progress } from '@/components/ui/progress';
 import { InventorySlot } from '@/types/game';
 
 const rarityColor: Record<string, string> = {
@@ -161,23 +164,89 @@ function TraderCard({
         </div>
       </div>
 
-      {/* Divider */}
-      <div className="h-[2px] bg-border/50 mx-3 shrink-0" />
+      {/* Tabs: Inventory / Quests */}
+      <Tabs defaultValue="inventory" className="flex flex-col flex-1 min-h-0">
+        <TabsList className="mx-3 mt-2 mb-0 h-8 bg-background/50 border-2 border-border rounded-lg p-0.5 shrink-0">
+          <TabsTrigger
+            value="inventory"
+            className="font-game text-[10px] uppercase tracking-wider rounded-md data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
+          >
+            Inventory
+          </TabsTrigger>
+          <TabsTrigger
+            value="quests"
+            className="font-game text-[10px] uppercase tracking-wider rounded-md data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
+          >
+            Quests
+          </TabsTrigger>
+        </TabsList>
 
-      {/* Scrollable item grid — show 4 rows (12 items) then scroll */}
-      <ScrollArea className="flex-1 min-h-0 max-h-[15.5rem] p-3">
-        <div className="grid grid-cols-3 gap-1.5">
-          {trader.inventory.map((slot, i) => (
-            <InventorySlotUI
-              key={i}
-              slot={slot}
-              size="md"
-              fullWidth
-              onItemClick={() => onItemClick(slot)}
-            />
-          ))}
-        </div>
-      </ScrollArea>
+        <TabsContent value="inventory" className="flex-1 min-h-0 mt-0">
+          <ScrollArea className="max-h-[15.5rem] p-3">
+            <div className="grid grid-cols-3 gap-1.5">
+              {trader.inventory.map((slot, i) => (
+                <InventorySlotUI
+                  key={i}
+                  slot={slot}
+                  size="md"
+                  fullWidth
+                  onItemClick={() => onItemClick(slot)}
+                />
+              ))}
+            </div>
+          </ScrollArea>
+        </TabsContent>
+
+        <TabsContent value="quests" className="flex-1 min-h-0 mt-0">
+          <ScrollArea className="max-h-[15.5rem] p-3">
+            <div className="flex flex-col gap-2">
+              {(TRADER_QUESTS[trader.id] ?? []).map((quest) => (
+                <QuestCard key={quest.id} quest={quest} />
+              ))}
+              {!(TRADER_QUESTS[trader.id]?.length) && (
+                <p className="font-game text-[10px] text-muted-foreground text-center py-4 uppercase">
+                  No quests available
+                </p>
+              )}
+            </div>
+          </ScrollArea>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
+
+function QuestCard({ quest }: { quest: TraderQuest }) {
+  const pct = Math.round((quest.progress / quest.maxProgress) * 100);
+
+  return (
+    <div
+      className={cn(
+        'border-2 border-border rounded-lg p-2.5 bg-card/50',
+        quest.completed && 'opacity-60',
+      )}
+    >
+      <div className="flex items-center justify-between mb-1">
+        <h4 className="font-game text-[10px] text-foreground uppercase tracking-wide leading-tight">
+          {quest.title}
+        </h4>
+        {quest.completed && <CheckCircle size={14} className="text-green-400 shrink-0" />}
+      </div>
+      <p className="text-[9px] text-muted-foreground leading-snug mb-2">
+        {quest.description}
+      </p>
+      <div className="flex items-center gap-2 mb-1.5">
+        <Progress value={pct} className="h-2 flex-1 bg-border" />
+        <span className="font-game text-[9px] text-foreground shrink-0">
+          {quest.progress}/{quest.maxProgress}
+        </span>
+      </div>
+      <div className="flex items-center gap-1">
+        <Gift size={10} className="text-yellow-400" />
+        <span className="font-game text-[9px] text-yellow-400 uppercase">
+          {quest.reward}
+        </span>
+      </div>
     </div>
   );
 }
