@@ -166,17 +166,17 @@ function TraderCard({
 
       {/* Folder-style tabs */}
       <Tabs defaultValue="inventory" className="flex flex-col flex-1 min-h-0">
-        <div className="flex mx-3 mt-2 shrink-0 gap-0.5">
-          <TabsList className="h-auto bg-transparent p-0 gap-0.5">
+        <div className="flex mx-3 mt-2 shrink-0">
+          <TabsList className="h-auto bg-transparent p-0 w-full">
             <TabsTrigger
               value="inventory"
-              className="font-game text-[10px] uppercase tracking-wider px-3 py-1.5 rounded-t-lg rounded-b-none border-2 border-b-0 border-border bg-card/30 text-muted-foreground data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:border-primary/50 data-[state=active]:shadow-none"
+              className="flex-1 font-game text-[10px] uppercase tracking-wider px-3 py-1.5 rounded-t-lg rounded-b-none border-2 border-b-0 border-border bg-card/30 text-muted-foreground data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:border-primary/50 data-[state=active]:shadow-none"
             >
               Inventory
             </TabsTrigger>
             <TabsTrigger
               value="quests"
-              className="font-game text-[10px] uppercase tracking-wider px-3 py-1.5 rounded-t-lg rounded-b-none border-2 border-b-0 border-border bg-card/30 text-muted-foreground data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:border-primary/50 data-[state=active]:shadow-none"
+              className="flex-1 font-game text-[10px] uppercase tracking-wider px-3 py-1.5 rounded-t-lg rounded-b-none border-2 border-b-0 border-border bg-card/30 text-muted-foreground data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:border-primary/50 data-[state=active]:shadow-none"
             >
               Quests
             </TabsTrigger>
