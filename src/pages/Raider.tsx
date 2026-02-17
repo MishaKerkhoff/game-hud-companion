@@ -73,8 +73,8 @@ export default function RaiderPage() {
         </button>
 
         {/* Embla viewport */}
-        <div className="overflow-hidden flex-1 mx-2 my-[8px]" ref={emblaRef}>
-          <div className="flex py-2">
+        <div className="overflow-hidden flex-1 mx-2" ref={emblaRef}>
+          <div className="flex py-6">
             {raiders.map((raider, idx) => {
               const Icon = iconMap[raider.icon] || Crosshair;
               const isActive = idx === selectedIndex;
