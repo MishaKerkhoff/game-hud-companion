@@ -72,8 +72,9 @@ export default function Craft() {
                 return (
                   <div key={bench.id} className="min-w-0 px-1" style={{ flex: '0 0 90px' }}>
                     <div
-                      onPointerUp={() => {
-                        if ((emblaApi as any)?.clickAllowed()) emblaApi!.scrollTo(idx);
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        emblaApi?.scrollTo(idx);
                       }}
                       className="cursor-pointer"
                     >
