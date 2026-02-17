@@ -65,7 +65,7 @@ export default function Shop() {
         {/* Carousel area */}
         <div className="relative w-full flex items-start flex-1 min-h-0 p-2">
           {/* Prev arrow */}
-          <button onClick={scrollPrev} className="raider-nav-arrow shrink-0 mt-16">
+          <button onClick={scrollPrev} className="raider-nav-arrow shrink-0 self-center">
             <ChevronLeft size={28} />
           </button>
 
@@ -88,7 +88,7 @@ export default function Shop() {
           </div>
 
           {/* Next arrow */}
-          <button onClick={scrollNext} className="raider-nav-arrow shrink-0 mt-16">
+          <button onClick={scrollNext} className="raider-nav-arrow shrink-0 self-center">
             <ChevronRight size={28} />
           </button>
         </div>
