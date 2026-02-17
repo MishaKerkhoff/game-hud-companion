@@ -70,7 +70,7 @@ export default function Craft() {
               {CRAFTING_BENCHES.map((bench, idx) => {
                 const isActive = idx === selectedIndex;
                 return (
-                  <div key={bench.id} className="flex-[0_0_40%] min-w-0 px-1.5">
+                  <div key={bench.id} className="flex-[0_0_22%] min-w-0 px-1.5">
                     <BenchCard bench={bench} isActive={isActive} />
                   </div>
                 );
@@ -134,7 +134,7 @@ function BenchCard({ bench, isActive }: { bench: CraftingBench; isActive: boolea
   return (
     <div
       className={cn(
-        'bench-card flex flex-col items-center gap-1 transition-all duration-300',
+        'bench-card flex flex-col items-center justify-center gap-1 aspect-square transition-all duration-300',
         isActive ? 'scale-105 opacity-100 bench-card-active' : 'scale-90 opacity-50',
       )}
       style={{ '--bench-color': `hsl(${rc})` } as React.CSSProperties}
