@@ -63,7 +63,7 @@ export default function RaiderPage() {
       </div>
 
       {/* Carousel area */}
-      <div className="relative w-full flex items-center">
+      <div className="relative w-full flex items-center hud-panel p-2">
         {/* Prev arrow */}
         <button
           onClick={scrollPrev}

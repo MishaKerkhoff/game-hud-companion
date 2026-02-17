@@ -63,7 +63,7 @@ export default function Shop() {
         </div>
 
         {/* Carousel area */}
-        <div className="relative w-full flex items-start flex-1 min-h-0">
+        <div className="relative w-full flex items-start flex-1 min-h-0 hud-panel p-2">
           {/* Prev arrow */}
           <button onClick={scrollPrev} className="raider-nav-arrow shrink-0 mt-16">
             <ChevronLeft size={28} />
