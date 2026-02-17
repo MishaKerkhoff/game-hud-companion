@@ -8,7 +8,7 @@ import { TRADER_QUESTS, TraderQuest } from '@/data/sample-quests';
 import { InventorySlotUI } from '@/components/game/InventorySlotUI';
 import { ItemDetailPopup } from '@/components/game/ItemDetailPopup';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+
 import { Progress } from '@/components/ui/progress';
 import { InventorySlot } from '@/types/game';
 
@@ -25,6 +25,7 @@ const SHOP_TAB_COLORS = ['#FFD8A8', '#4DE94C'];
 export default function Shop() {
   const [selectedSlot, setSelectedSlot] = useState<InventorySlot | null>(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [openPopup, setOpenPopup] = useState<{ type: 'inventory' | 'quests'; trader: Trader } | null>(null);
 
   const [emblaRef, emblaApi] = useEmblaCarousel({ align: 'center', loop: true });
 
@@ -89,7 +90,8 @@ export default function Shop() {
                     <TraderCard
                       trader={trader}
                       isActive={isActive}
-                      onItemClick={handleItemClick}
+                      onInventory={() => setOpenPopup({ type: 'inventory', trader })}
+                      onQuests={() => setOpenPopup({ type: 'quests', trader })}
                     />
                   </div>
                 );
@@ -124,6 +126,16 @@ export default function Shop() {
           onSell={() => closePopup()}
         />
       )}
+
+      {/* Inventory / Quests popup */}
+      {openPopup && (
+        <ShopPopup
+          type={openPopup.type}
+          trader={openPopup.trader}
+          onClose={() => setOpenPopup(null)}
+          onItemClick={handleItemClick}
+        />
+      )}
     </>
   );
 }
@@ -131,13 +143,14 @@ export default function Shop() {
 function TraderCard({
   trader,
   isActive,
-  onItemClick,
+  onInventory,
+  onQuests,
 }: {
   trader: Trader;
   isActive: boolean;
-  onItemClick: (slot: InventorySlot) => void;
+  onInventory: () => void;
+  onQuests: () => void;
 }) {
-  const [activeTabIdx, setActiveTabIdx] = useState(0);
   const TraderIcon = icons[trader.icon as keyof typeof icons];
   const rc = rarityColor[trader.rarity];
 
@@ -175,27 +188,73 @@ function TraderCard({
         </div>
       </div>
 
-      {/* Folder-style tabs */}
-      <Tabs defaultValue="inventory" onValueChange={(v) => setActiveTabIdx(v === 'inventory' ? 0 : 1)} className="flex flex-col flex-1 min-h-0" style={{ '--active-tab-color': SHOP_TAB_COLORS[activeTabIdx] } as React.CSSProperties}>
-        <TabsList className="w-full bg-transparent rounded-none p-0 h-auto gap-0 border-b-0 mx-3 pr-6">
-          <TabsTrigger
-            value="inventory"
-            className="skill-tab font-game text-[10px] game-outline uppercase flex-1 rounded-t-lg rounded-b-none px-3 py-2 border-0 transition-all shadow-none"
-            style={{ '--tab-color': SHOP_TAB_COLORS[0] } as React.CSSProperties}
-          >
-            Inventory
-          </TabsTrigger>
-          <TabsTrigger
-            value="quests"
-            className="skill-tab font-game text-[10px] game-outline uppercase flex-1 rounded-t-lg rounded-b-none px-3 py-2 border-0 transition-all shadow-none"
-            style={{ '--tab-color': SHOP_TAB_COLORS[1] } as React.CSSProperties}
-          >
-            Quests
-          </TabsTrigger>
-        </TabsList>
+      {/* Action buttons */}
+      <div className="flex flex-col gap-2 px-4 pb-4">
+        <button
+          className="popup-btn popup-btn-cancel w-full"
+          style={{ borderColor: SHOP_TAB_COLORS[0], color: SHOP_TAB_COLORS[0] }}
+          onClick={(e) => { e.stopPropagation(); onInventory(); }}
+        >
+          INVENTORY
+        </button>
+        <button
+          className="popup-btn popup-btn-cancel w-full"
+          style={{ borderColor: SHOP_TAB_COLORS[1], color: SHOP_TAB_COLORS[1] }}
+          onClick={(e) => { e.stopPropagation(); onQuests(); }}
+        >
+          QUESTS
+        </button>
+      </div>
+    </div>
+  );
+}
 
-        <TabsContent value="inventory" className="flex-1 min-h-0 mt-0 overflow-hidden">
-          <ScrollArea className="h-full max-h-[15.5rem] p-3">
+function ShopPopup({
+  type,
+  trader,
+  onClose,
+  onItemClick,
+}: {
+  type: 'inventory' | 'quests';
+  trader: Trader;
+  onClose: () => void;
+  onItemClick: (slot: InventorySlot) => void;
+}) {
+  const rc = rarityColor[trader.rarity];
+  const color = type === 'inventory' ? SHOP_TAB_COLORS[0] : SHOP_TAB_COLORS[1];
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/60" />
+      <div
+        className="relative raider-card w-full max-w-sm max-h-[80vh] flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="h-2 rounded-t-[12px] shrink-0" style={{ background: `hsl(${rc})` }} />
+        <div className="flex items-center justify-between px-4 pt-3 pb-2">
+          <div>
+            <h3 className="font-game text-sm text-foreground game-outline uppercase">
+              {trader.name}
+            </h3>
+            <span
+              className="font-game text-[10px] uppercase tracking-wider game-outline"
+              style={{ color }}
+            >
+              {type === 'inventory' ? 'Inventory' : 'Quests'}
+            </span>
+          </div>
+          <button
+            className="font-game text-lg text-destructive game-outline leading-none px-1"
+            onClick={onClose}
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* Content */}
+        <ScrollArea className="flex-1 min-h-0 max-h-[60vh] p-3">
+          {type === 'inventory' ? (
             <div className="grid grid-cols-3 gap-1.5">
               {trader.inventory.map((slot, i) => (
                 <InventorySlotUI
@@ -207,11 +266,7 @@ function TraderCard({
                 />
               ))}
             </div>
-          </ScrollArea>
-        </TabsContent>
-
-        <TabsContent value="quests" className="flex-1 min-h-0 mt-0 overflow-hidden">
-          <ScrollArea className="h-full max-h-[15.5rem] p-3">
+          ) : (
             <div className="flex flex-col gap-2">
               {(TRADER_QUESTS[trader.id] ?? []).map((quest) => (
                 <QuestCard key={quest.id} quest={quest} />
@@ -222,9 +277,9 @@ function TraderCard({
                 </p>
               )}
             </div>
-          </ScrollArea>
-        </TabsContent>
-      </Tabs>
+          )}
+        </ScrollArea>
+      </div>
     </div>
   );
 }
