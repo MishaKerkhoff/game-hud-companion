@@ -100,12 +100,12 @@ export default function Craft() {
             Blueprints
           </h3>
           <ScrollArea className="flex-1 max-h-[22rem]">
-            <div className="grid grid-cols-3 gap-1.5 px-1 pb-2">
+            <div className="grid gap-1 px-1 pb-2" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(48px, 1fr))' }}>
               {recipeSlots.map((slot, i) => (
                 <InventorySlotUI
                   key={`${activeBench.id}-${i}`}
                   slot={slot}
-                  size="lg"
+                  size="md"
                   fullWidth
                   onItemClick={() => setSelectedRecipe(activeBench.recipes[i])}
                 />
