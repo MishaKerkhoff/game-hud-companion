@@ -351,7 +351,7 @@
   }
 
   .skill-tab[data-state="inactive"] {
-    background: hsl(var(--muted) / 0.25) !important;
+    background: color-mix(in srgb, var(--tab-color) 25%, transparent) !important;
     color: hsl(var(--muted-foreground)) !important;
   }
 }
