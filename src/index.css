@@ -353,6 +353,7 @@
     box-shadow: none !important;
     border: 2px solid hsl(var(--hud-border)) !important;
     border-bottom: 2px solid color-mix(in srgb, var(--tab-color) 35%, transparent) !important;
+    -webkit-text-stroke: 0.5px hsl(220 20% 10% / 0.4);
   }
 
   .skill-tab[data-state="inactive"] {
@@ -360,5 +361,6 @@
     color: hsl(var(--muted-foreground)) !important;
     border: 2px solid hsl(var(--hud-border)) !important;
     border-bottom: 2px solid color-mix(in srgb, var(--active-tab-color) 35%, transparent) !important;
+    -webkit-text-stroke: 0.5px hsl(220 20% 10% / 0.4);
   }
 }
