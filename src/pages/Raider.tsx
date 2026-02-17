@@ -2,8 +2,8 @@ import { useState, useCallback, useEffect } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import {
   Crosshair, Shield, HeartPulse, Bomb, Ghost,
-  ChevronLeft, ChevronRight, Heart, Swords, Gauge,
-} from 'lucide-react';
+  ChevronLeft, ChevronRight, Heart, Swords, Gauge } from
+'lucide-react';
 import { cn } from '@/lib/utils';
 import { sampleRaiders } from '@/data/sample-raiders';
 import type { Raider } from '@/types/raider';
@@ -11,7 +11,7 @@ import RaiderDetail from '@/components/game/RaiderDetail';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const iconMap: Record<string, any> = {
-  crosshair: Crosshair, shield: Shield, 'heart-pulse': HeartPulse, bomb: Bomb, ghost: Ghost,
+  crosshair: Crosshair, shield: Shield, 'heart-pulse': HeartPulse, bomb: Bomb, ghost: Ghost
 };
 
 const rarityColor: Record<string, string> = {
@@ -19,7 +19,7 @@ const rarityColor: Record<string, string> = {
   uncommon: 'var(--rarity-uncommon)',
   rare: 'var(--rarity-rare)',
   epic: 'var(--rarity-epic)',
-  legendary: 'var(--rarity-legendary)',
+  legendary: 'var(--rarity-legendary)'
 };
 
 export default function RaiderPage() {
@@ -38,17 +38,17 @@ export default function RaiderPage() {
     if (!emblaApi) return;
     onSelect();
     emblaApi.on('select', onSelect);
-    return () => { emblaApi.off('select', onSelect); };
+    return () => {emblaApi.off('select', onSelect);};
   }, [emblaApi, onSelect]);
 
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
 
   const handleSelect = (id: string) => {
-    setRaiders(prev => prev.map(r => ({ ...r, selected: r.id === id })));
+    setRaiders((prev) => prev.map((r) => ({ ...r, selected: r.id === id })));
   };
 
-  const selectedCount = raiders.filter(r => r.selected).length;
+  const selectedCount = raiders.filter((r) => r.selected).length;
 
   return (
     <div className="flex flex-col items-center justify-center h-full gap-4 select-none">
@@ -63,17 +63,17 @@ export default function RaiderPage() {
       </div>
 
       {/* Carousel area */}
-      <div className="relative w-full flex items-center hud-panel p-2">
+      <div className="relative w-full flex items-center text-transparent">
         {/* Prev arrow */}
         <button
           onClick={scrollPrev}
-          className="raider-nav-arrow shrink-0"
-        >
+          className="raider-nav-arrow shrink-0">
+
           <ChevronLeft size={28} />
         </button>
 
         {/* Embla viewport */}
-        <div className="overflow-hidden flex-1 mx-2" ref={emblaRef}>
+        <div className="overflow-hidden flex-1 mx-[8px] my-[8px] bg-transparent text-transparent" ref={emblaRef}>
           <div className="flex py-2">
             {raiders.map((raider, idx) => {
               const Icon = iconMap[raider.icon] || Crosshair;
@@ -83,21 +83,21 @@ export default function RaiderPage() {
               return (
                 <div
                   key={raider.id}
-                  className="flex-[0_0_55%] min-w-0 px-2"
-                >
+                  className="flex-[0_0_55%] min-w-0 px-2">
+
                   <div
                     className={cn(
                       'raider-card cursor-pointer transition-all duration-200',
                       isActive && 'scale-[1.02]',
-                      raider.selected && 'raider-card-selected',
+                      raider.selected && 'raider-card-selected'
                     )}
-                    onClick={() => setDetailRaider(raider)}
-                  >
+                    onClick={() => setDetailRaider(raider)}>
+
                     {/* Rarity accent bar */}
                     <div
                       className="h-2 rounded-t-[12px] -mx-[1px] -mt-[1px]"
-                      style={{ background: `hsl(${rc})` }}
-                    />
+                      style={{ background: `hsl(${rc})` }} />
+
 
                     <div className="flex flex-col items-center gap-3 p-5 pt-4">
                       {/* Avatar */}
@@ -105,9 +105,9 @@ export default function RaiderPage() {
                         className="raider-avatar"
                         style={{
                           borderColor: `hsl(${rc})`,
-                          boxShadow: `0 0 20px hsl(${rc} / 0.3)`,
-                        }}
-                      >
+                          boxShadow: `0 0 20px hsl(${rc} / 0.3)`
+                        }}>
+
                         <Icon size={40} style={{ color: `hsl(${rc})` }} />
                       </div>
 
@@ -135,10 +135,10 @@ export default function RaiderPage() {
                           <div
                             className="xp-bar-fill"
                             style={{
-                              width: `${(raider.xp / raider.xpMax) * 100}%`,
-                              background: `hsl(${rc})`,
-                            }}
-                          />
+                              width: `${raider.xp / raider.xpMax * 100}%`,
+                              background: `hsl(${rc})`
+                            }} />
+
                         </div>
                       </div>
 
@@ -162,19 +162,19 @@ export default function RaiderPage() {
                       <button
                         className={cn(
                           'popup-btn w-full',
-                          raider.selected ? 'popup-btn-cancel' : 'popup-btn-sell',
+                          raider.selected ? 'popup-btn-cancel' : 'popup-btn-sell'
                         )}
                         onClick={(e) => {
                           e.stopPropagation();
                           handleSelect(raider.id);
-                        }}
-                      >
+                        }}>
+
                         {raider.selected ? 'SELECTED' : 'SELECT'}
                       </button>
                     </div>
                   </div>
-                </div>
-              );
+                </div>);
+
             })}
           </div>
         </div>
@@ -182,33 +182,33 @@ export default function RaiderPage() {
         {/* Next arrow */}
         <button
           onClick={scrollNext}
-          className="raider-nav-arrow shrink-0"
-        >
+          className="raider-nav-arrow shrink-0">
+
           <ChevronRight size={28} />
         </button>
       </div>
 
       {/* Dot indicators */}
       <div className="flex gap-2">
-        {raiders.map((_, idx) => (
-          <button
-            key={idx}
-            className={cn(
-              'dot-indicator',
-              idx === selectedIndex && 'dot-active',
-            )}
-            onClick={() => emblaApi?.scrollTo(idx)}
-          />
-        ))}
+        {raiders.map((_, idx) =>
+        <button
+          key={idx}
+          className={cn(
+            'dot-indicator',
+            idx === selectedIndex && 'dot-active'
+          )}
+          onClick={() => emblaApi?.scrollTo(idx)} />
+
+        )}
       </div>
 
       {/* Detail overlay */}
-      {detailRaider && (
-        <RaiderDetail
-          raider={detailRaider}
-          onClose={() => setDetailRaider(null)}
-        />
-      )}
-    </div>
-  );
+      {detailRaider &&
+      <RaiderDetail
+        raider={detailRaider}
+        onClose={() => setDetailRaider(null)} />
+
+      }
+    </div>);
+
 }
