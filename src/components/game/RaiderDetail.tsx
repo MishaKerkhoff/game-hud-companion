@@ -8,7 +8,8 @@ import {
   EyeOff, Sword, Cloud, Droplets, Skull, Wind,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { Raider, Skill } from '@/types/raider';
+import type { Raider, Skill, SkillCategory } from '@/types/raider';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const avatarIcons: Record<string, any> = {
@@ -29,6 +30,12 @@ const rarityColor: Record<string, string> = {
   rare: 'var(--rarity-rare)', epic: 'var(--rarity-epic)', legendary: 'var(--rarity-legendary)',
 };
 
+const SKILL_TABS: { value: SkillCategory; label: string }[] = [
+  { value: 'offense', label: 'OFFENSE' },
+  { value: 'defense', label: 'DEFENSE' },
+  { value: 'utility', label: 'UTILITY' },
+];
+
 interface Props {
   raider: Raider;
   onClose: () => void;
@@ -38,13 +45,16 @@ export default function RaiderDetail({ raider, onClose }: Props) {
   const AvatarIcon = avatarIcons[raider.icon] || Crosshair;
   const rc = rarityColor[raider.rarity];
 
+  const skillsByCategory = (cat: SkillCategory) =>
+    raider.skills.filter((s) => s.category === cat);
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 animate-fade-in p-4">
-      <div className="popup-panel w-full max-w-lg max-h-[90vh] overflow-y-auto">
+      <div className="popup-panel w-full max-w-3xl max-h-[90vh] overflow-y-auto">
         {/* Rarity bar */}
         <div className="h-2 rounded-t-[12px] -mx-[1px] -mt-[1px]" style={{ background: `hsl(${rc})` }} />
 
-        <div className="p-5 space-y-5">
+        <div className="p-5 space-y-4">
           {/* Header */}
           <div className="flex items-center gap-3">
             <button onClick={onClose} className="popup-btn popup-btn-cancel p-2 !px-3">
@@ -56,72 +66,111 @@ export default function RaiderDetail({ raider, onClose }: Props) {
             </span>
           </div>
 
-          {/* Avatar + Role */}
-          <div className="flex flex-col items-center gap-2">
-            <div
-              className="raider-avatar w-24 h-24"
-              style={{ borderColor: `hsl(${rc})`, boxShadow: `0 0 30px hsl(${rc} / 0.4)` }}
-            >
-              <AvatarIcon size={52} style={{ color: `hsl(${rc})` }} />
-            </div>
-            <span className="font-game text-xs text-secondary game-outline uppercase tracking-wider">
-              {raider.role}
-            </span>
-            <p className="text-sm text-muted-foreground text-center italic max-w-xs">
-              "{raider.description}"
-            </p>
-          </div>
+          {/* Two-column layout */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {/* LEFT COLUMN – Stats */}
+            <div className="space-y-4">
+              {/* Avatar + Role */}
+              <div className="flex flex-col items-center gap-2">
+                <div
+                  className="raider-avatar w-24 h-24"
+                  style={{ borderColor: `hsl(${rc})`, boxShadow: `0 0 30px hsl(${rc} / 0.4)` }}
+                >
+                  <AvatarIcon size={52} style={{ color: `hsl(${rc})` }} />
+                </div>
+                <span className="font-game text-xs text-secondary game-outline uppercase tracking-wider">
+                  {raider.role}
+                </span>
+                <p className="text-sm text-muted-foreground text-center italic max-w-xs">
+                  "{raider.description}"
+                </p>
+              </div>
 
-          {/* Power / XP */}
-          <div>
-            <div className="flex justify-between mb-1">
-              <span className="font-game text-[10px] text-secondary game-outline">POWER</span>
-              <span className="font-game text-[10px] text-muted-foreground game-outline">
-                Lv {raider.level} / MAX 11
-              </span>
-            </div>
-            <div className="xp-bar h-4">
-              <div
-                className="xp-bar-fill"
-                style={{ width: `${(raider.xp / raider.xpMax) * 100}%`, background: `hsl(${rc})` }}
-              />
-            </div>
-          </div>
+              {/* Power / XP */}
+              <div>
+                <div className="flex justify-between mb-1">
+                  <span className="font-game text-[10px] text-secondary game-outline">POWER</span>
+                  <span className="font-game text-[10px] text-muted-foreground game-outline">
+                    Lv {raider.level} / MAX 11
+                  </span>
+                </div>
+                <div className="xp-bar h-4">
+                  <div
+                    className="xp-bar-fill"
+                    style={{ width: `${(raider.xp / raider.xpMax) * 100}%`, background: `hsl(${rc})` }}
+                  />
+                </div>
+              </div>
 
-          {/* Stats grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            <div className="stat-block text-center">
-              <span className="stat-label"><Heart size={10} className="inline mr-0.5" />HEALTH</span>
-              <span className="stat-value">{raider.stats.health}</span>
-            </div>
-            <div className="stat-block text-center">
-              <span className="stat-label"><Swords size={10} className="inline mr-0.5" />ATTACK</span>
-              <span className="stat-value text-base">{raider.stats.attack}</span>
-            </div>
-            <div className="stat-block text-center">
-              <span className="stat-label"><Zap size={10} className="inline mr-0.5" />SUPER</span>
-              <span className="stat-value text-xs leading-tight">{raider.stats.super}</span>
-            </div>
-            <div className="stat-block text-center">
-              <span className="stat-label"><Gauge size={10} className="inline mr-0.5" />SPEED</span>
-              <span className="stat-value">{raider.stats.speed}</span>
-            </div>
-          </div>
+              {/* Stats grid */}
+              <div className="grid grid-cols-2 gap-2">
+                <div className="stat-block text-center">
+                  <span className="stat-label"><Heart size={10} className="inline mr-0.5" />HEALTH</span>
+                  <span className="stat-value">{raider.stats.health}</span>
+                </div>
+                <div className="stat-block text-center">
+                  <span className="stat-label"><Swords size={10} className="inline mr-0.5" />ATTACK</span>
+                  <span className="stat-value text-base">{raider.stats.attack}</span>
+                </div>
+                <div className="stat-block text-center">
+                  <span className="stat-label"><Gauge size={10} className="inline mr-0.5" />SPEED</span>
+                  <span className="stat-value">{raider.stats.speed}</span>
+                </div>
+                <div className="stat-block text-center">
+                  <span className="stat-label"><ShieldHalf size={10} className="inline mr-0.5" />DEFENSE</span>
+                  <span className="stat-value">{raider.stats.defense}</span>
+                </div>
+              </div>
 
-          {/* Defense */}
-          <div className="stat-block flex items-center justify-center gap-2">
-            <ShieldHalf size={16} className="text-secondary" />
-            <span className="stat-label">DEFENSE</span>
-            <span className="stat-value">{raider.stats.defense}</span>
-          </div>
+              {/* Super */}
+              <div className="stat-block flex items-center justify-center gap-2">
+                <Zap size={16} className="text-secondary" />
+                <span className="stat-label">SUPER</span>
+                <span className="stat-value text-sm">{raider.stats.super}</span>
+              </div>
+            </div>
 
-          {/* Skills */}
-          <div>
-            <h3 className="font-game text-sm text-primary game-outline mb-3">SKILLS</h3>
-            <div className="grid grid-cols-3 gap-2">
-              {raider.skills.map((skill) => (
-                <SkillNode key={skill.id} skill={skill} rarityColor={rc} />
-              ))}
+            {/* RIGHT COLUMN – Skill Trees */}
+            <div>
+              <Tabs defaultValue="offense" className="w-full">
+                <TabsList className="w-full bg-transparent border-b-2 border-border rounded-none p-0 h-auto gap-0">
+                  {SKILL_TABS.map((tab) => (
+                    <TabsTrigger
+                      key={tab.value}
+                      value={tab.value}
+                      className={cn(
+                        'font-game text-[10px] game-outline uppercase flex-1 rounded-t-lg rounded-b-none px-3 py-2',
+                        'border-2 border-b-0 border-transparent',
+                        'data-[state=active]:border-current data-[state=active]:bg-card/60',
+                        'data-[state=inactive]:text-muted-foreground data-[state=inactive]:bg-transparent',
+                        'transition-colors shadow-none',
+                      )}
+                      style={{ color: `hsl(${rc})` }}
+                    >
+                      {tab.label}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+
+                {SKILL_TABS.map((tab) => {
+                  const skills = skillsByCategory(tab.value);
+                  return (
+                    <TabsContent key={tab.value} value={tab.value} className="mt-0 border-2 border-t-0 border-border rounded-b-lg p-3 max-h-64 overflow-y-auto">
+                      {skills.length > 0 ? (
+                        <div className="grid grid-cols-3 gap-2">
+                          {skills.map((skill) => (
+                            <SkillNode key={skill.id} skill={skill} rarityColor={rc} />
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="font-game text-[10px] text-muted-foreground game-outline text-center py-4">
+                          NO SKILLS
+                        </p>
+                      )}
+                    </TabsContent>
+                  );
+                })}
+              </Tabs>
             </div>
           </div>
         </div>
