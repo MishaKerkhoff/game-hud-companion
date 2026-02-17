@@ -20,6 +20,8 @@ const rarityColor: Record<string, string> = {
   legendary: 'var(--rarity-legendary)',
 };
 
+const SHOP_TAB_COLORS = ['#FFD8A8', '#4DE94C'];
+
 export default function Shop() {
   const [selectedSlot, setSelectedSlot] = useState<InventorySlot | null>(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -127,6 +129,7 @@ function TraderCard({
   isActive: boolean;
   onItemClick: (slot: InventorySlot) => void;
 }) {
+  const [activeTabIdx, setActiveTabIdx] = useState(0);
   const TraderIcon = icons[trader.icon as keyof typeof icons];
   const rc = rarityColor[trader.rarity];
 
@@ -165,24 +168,23 @@ function TraderCard({
       </div>
 
       {/* Folder-style tabs */}
-      <Tabs defaultValue="inventory" className="flex flex-col flex-1 min-h-0">
-        <div className="flex mx-3 mt-2 shrink-0">
-          <TabsList className="h-auto bg-transparent p-0 w-full">
-            <TabsTrigger
-              value="inventory"
-              className="flex-1 font-game text-[10px] uppercase tracking-wider px-3 py-1.5 rounded-t-lg rounded-b-none border-2 border-b-0 border-border bg-card/30 text-muted-foreground data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:border-primary/50 data-[state=active]:shadow-none"
-            >
-              Inventory
-            </TabsTrigger>
-            <TabsTrigger
-              value="quests"
-              className="flex-1 font-game text-[10px] uppercase tracking-wider px-3 py-1.5 rounded-t-lg rounded-b-none border-2 border-b-0 border-border bg-card/30 text-muted-foreground data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:border-primary/50 data-[state=active]:shadow-none"
-            >
-              Quests
-            </TabsTrigger>
-          </TabsList>
-        </div>
-        <div className="h-[2px] bg-border/50 mx-3 shrink-0" />
+      <Tabs defaultValue="inventory" onValueChange={(v) => setActiveTabIdx(v === 'inventory' ? 0 : 1)} className="flex flex-col flex-1 min-h-0" style={{ '--active-tab-color': SHOP_TAB_COLORS[activeTabIdx] } as React.CSSProperties}>
+        <TabsList className="w-full bg-transparent rounded-none p-0 h-auto gap-0 border-b-0 mx-3 pr-6">
+          <TabsTrigger
+            value="inventory"
+            className="skill-tab font-game text-[10px] game-outline uppercase flex-1 rounded-t-lg rounded-b-none px-3 py-2 border-0 transition-all shadow-none"
+            style={{ '--tab-color': SHOP_TAB_COLORS[0] } as React.CSSProperties}
+          >
+            Inventory
+          </TabsTrigger>
+          <TabsTrigger
+            value="quests"
+            className="skill-tab font-game text-[10px] game-outline uppercase flex-1 rounded-t-lg rounded-b-none px-3 py-2 border-0 transition-all shadow-none"
+            style={{ '--tab-color': SHOP_TAB_COLORS[1] } as React.CSSProperties}
+          >
+            Quests
+          </TabsTrigger>
+        </TabsList>
 
         <TabsContent value="inventory" className="flex-1 min-h-0 mt-0 overflow-hidden">
           <ScrollArea className="h-full max-h-[15.5rem] p-3">
