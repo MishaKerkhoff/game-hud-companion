@@ -8,6 +8,7 @@ import MainMenu from "./pages/MainMenu";
 import Stash from "./pages/Stash";
 import PlaceholderPage from "./pages/PlaceholderPage";
 import Raider from "./pages/Raider";
+import Shop from "./pages/Shop";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -24,7 +25,7 @@ const App = () => (
           <Route element={<MenuLayout />}>
             <Route path="/" element={<MainMenu />} />
             <Route path="/stash" element={<Stash />} />
-            <Route path="/shop" element={<PlaceholderPage title="Shop" />} />
+            <Route path="/shop" element={<Shop />} />
             <Route path="/craft" element={<PlaceholderPage title="Craft" />} />
             <Route path="/stats" element={<Raider />} />
           </Route>
