@@ -87,8 +87,8 @@ export default function RaiderPage() {
 
                   <div
                     className={cn(
-                      'raider-card cursor-pointer transition-all duration-200',
-                      isActive && 'scale-[1.02]',
+                      'raider-card cursor-pointer transition-all duration-300',
+                      isActive ? 'scale-[1.08] opacity-100' : 'scale-[0.85] opacity-60',
                       raider.selected && 'raider-card-selected'
                     )}
                     onClick={() => setDetailRaider(raider)}>
