@@ -66,7 +66,7 @@ function GridContent() {
                 />
                 <span
                   className={cn(
-                    'font-game text-[8px] md:text-[9px] game-outline leading-tight',
+                    'font-game text-[8px] md:text-[9px] leading-tight',
                     active ? 'text-primary' : 'text-foreground',
                   )}
                 >
