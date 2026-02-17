@@ -12,7 +12,7 @@ export default function MainMenu() {
           className="font-game text-5xl md:text-7xl game-outline"
           style={{
             color: 'hsl(var(--primary))',
-            textShadow: '0 0 30px hsl(var(--primary) / 0.4), 0 4px 0 hsl(220 20% 8%)',
+            textShadow: '0 0 30px hsl(var(--primary) / 0.4), 0 4px 0 hsl(60 14% 6%)',
           }}
         >
           RAIDER

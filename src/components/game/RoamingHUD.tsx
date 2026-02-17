@@ -72,20 +72,20 @@ export function RoamingHUD({
               className="h-full rounded-full transition-all duration-500 ease-out"
               style={{
                 width: `${healthPercent}%`,
-                background: 'linear-gradient(90deg, hsl(0 70% 40%), hsl(0 80% 55%))',
-                boxShadow: '0 0 8px hsl(0 80% 55% / 0.5)',
+                background: 'linear-gradient(90deg, hsl(120 60% 35%), hsl(120 82% 53%))',
+                boxShadow: '0 0 8px hsl(120 82% 53% / 0.5)',
               }}
             />
           </div>
         </div>
         <div className="hud-panel px-2 py-1.5 flex items-center gap-2 w-28 md:w-36">
-          <div className="flex-1 h-3 rounded-full overflow-hidden" style={{ background: 'hsl(210 30% 15%)' }}>
+          <div className="flex-1 h-3 rounded-full overflow-hidden" style={{ background: 'hsl(207 20% 12%)' }}>
             <div
               className="h-full rounded-full transition-all duration-500 ease-out"
               style={{
                 width: `${shieldPercent}%`,
-                background: 'linear-gradient(90deg, hsl(210 70% 40%), hsl(210 80% 60%))',
-                boxShadow: '0 0 8px hsl(210 80% 55% / 0.5)',
+                background: 'linear-gradient(90deg, hsl(207 30% 35%), hsl(207 27% 47%))',
+                boxShadow: '0 0 8px hsl(207 27% 47% / 0.5)',
               }}
             />
           </div>
