@@ -139,9 +139,9 @@ export default function RaiderDetail({ raider, onClose }: Props) {
                 <TabsList className="w-full bg-transparent rounded-none p-0 h-auto gap-1 border-b-0">
                   {SKILL_TABS.map((tab, i) => {
                     const tabColors = [
-                      `hsl(${rc})`,           // offense - rarity color
-                      'hsl(var(--muted))',     // defense - muted
-                      'hsl(var(--accent))',    // utility - accent
+                      '#4DE94C',
+                      '#FFD8A8',
+                      '#FF3333',
                     ];
                     return (
                       <TabsTrigger
@@ -158,9 +158,9 @@ export default function RaiderDetail({ raider, onClose }: Props) {
 
                 {SKILL_TABS.map((tab, i) => {
                   const tabColors = [
-                    `hsl(${rc})`,
-                    'hsl(var(--muted))',
-                    'hsl(var(--accent))',
+                    '#4DE94C',
+                    '#FFD8A8',
+                    '#FF3333',
                   ];
                   const skills = skillsByCategory(tab.value);
                   return (
