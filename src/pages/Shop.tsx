@@ -164,25 +164,28 @@ function TraderCard({
         </div>
       </div>
 
-      {/* Tabs: Inventory / Quests */}
+      {/* Folder-style tabs */}
       <Tabs defaultValue="inventory" className="flex flex-col flex-1 min-h-0">
-        <TabsList className="mx-3 mt-2 mb-0 h-8 bg-background/50 border-2 border-border rounded-lg p-0.5 shrink-0">
-          <TabsTrigger
-            value="inventory"
-            className="font-game text-[10px] uppercase tracking-wider rounded-md data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
-          >
-            Inventory
-          </TabsTrigger>
-          <TabsTrigger
-            value="quests"
-            className="font-game text-[10px] uppercase tracking-wider rounded-md data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
-          >
-            Quests
-          </TabsTrigger>
-        </TabsList>
+        <div className="flex mx-3 mt-2 shrink-0 gap-0.5">
+          <TabsList className="h-auto bg-transparent p-0 gap-0.5">
+            <TabsTrigger
+              value="inventory"
+              className="font-game text-[10px] uppercase tracking-wider px-3 py-1.5 rounded-t-lg rounded-b-none border-2 border-b-0 border-border bg-card/30 text-muted-foreground data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:border-primary/50 data-[state=active]:shadow-none"
+            >
+              Inventory
+            </TabsTrigger>
+            <TabsTrigger
+              value="quests"
+              className="font-game text-[10px] uppercase tracking-wider px-3 py-1.5 rounded-t-lg rounded-b-none border-2 border-b-0 border-border bg-card/30 text-muted-foreground data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:border-primary/50 data-[state=active]:shadow-none"
+            >
+              Quests
+            </TabsTrigger>
+          </TabsList>
+        </div>
+        <div className="h-[2px] bg-border/50 mx-3 shrink-0" />
 
-        <TabsContent value="inventory" className="flex-1 min-h-0 mt-0">
-          <ScrollArea className="max-h-[15.5rem] p-3">
+        <TabsContent value="inventory" className="flex-1 min-h-0 mt-0 overflow-hidden">
+          <ScrollArea className="h-full max-h-[15.5rem] p-3">
             <div className="grid grid-cols-3 gap-1.5">
               {trader.inventory.map((slot, i) => (
                 <InventorySlotUI
@@ -197,8 +200,8 @@ function TraderCard({
           </ScrollArea>
         </TabsContent>
 
-        <TabsContent value="quests" className="flex-1 min-h-0 mt-0">
-          <ScrollArea className="max-h-[15.5rem] p-3">
+        <TabsContent value="quests" className="flex-1 min-h-0 mt-0 overflow-hidden">
+          <ScrollArea className="h-full max-h-[15.5rem] p-3">
             <div className="flex flex-col gap-2">
               {(TRADER_QUESTS[trader.id] ?? []).map((quest) => (
                 <QuestCard key={quest.id} quest={quest} />
