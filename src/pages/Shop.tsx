@@ -71,7 +71,7 @@ export default function Shop() {
 
           {/* Embla viewport */}
           <div className="overflow-hidden flex-1 mx-2 h-full" ref={emblaRef}>
-            <div className="flex h-full py-2">
+            <div className="flex h-full py-6">
               {TRADERS.map((trader, idx) => {
                 const isActive = idx === selectedIndex;
                 return (
