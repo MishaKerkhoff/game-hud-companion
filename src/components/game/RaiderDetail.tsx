@@ -10,7 +10,7 @@ import {
 import { cn } from '@/lib/utils';
 import type { Raider, Skill, SkillCategory } from '@/types/raider';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-
+import { useState } from 'react';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const avatarIcons: Record<string, any> = {
   crosshair: Crosshair, shield: Shield, 'heart-pulse': HeartPulse, bomb: Bomb, ghost: Ghost,
@@ -30,6 +30,8 @@ const rarityColor: Record<string, string> = {
   rare: 'var(--rarity-rare)', epic: 'var(--rarity-epic)', legendary: 'var(--rarity-legendary)',
 };
 
+const SKILL_TAB_COLORS = ['#4DE94C', '#FFD8A8', '#FF3333'];
+
 const SKILL_TABS: { value: SkillCategory; label: string }[] = [
   { value: 'offense', label: 'OFFENSE' },
   { value: 'defense', label: 'DEFENSE' },
@@ -42,6 +44,7 @@ interface Props {
 }
 
 export default function RaiderDetail({ raider, onClose }: Props) {
+  const [activeTabIdx, setActiveTabIdx] = useState(0);
   const AvatarIcon = avatarIcons[raider.icon] || Crosshair;
   const rc = rarityColor[raider.rarity];
 
@@ -135,36 +138,27 @@ export default function RaiderDetail({ raider, onClose }: Props) {
 
             {/* RIGHT COLUMN – Skill Trees */}
             <div className="flex flex-col h-full">
-              <Tabs defaultValue="offense" className="w-full flex flex-col flex-1">
+              <Tabs defaultValue="offense" onValueChange={(v) => {
+                const idx = SKILL_TABS.findIndex(t => t.value === v);
+                setActiveTabIdx(idx >= 0 ? idx : 0);
+              }} className="w-full flex flex-col flex-1" style={{ '--active-tab-color': SKILL_TAB_COLORS[activeTabIdx] } as React.CSSProperties}>
                 <TabsList className="w-full bg-transparent rounded-none p-0 h-auto gap-0 border-b-0">
-                  {SKILL_TABS.map((tab, i) => {
-                    const tabColors = [
-                      '#4DE94C',
-                      '#FFD8A8',
-                      '#FF3333',
-                    ];
-                    return (
-                      <TabsTrigger
-                        key={tab.value}
-                        value={tab.value}
-                        className="skill-tab font-game text-[10px] game-outline uppercase flex-1 rounded-t-lg rounded-b-none px-3 py-2 border-0 transition-all shadow-none"
-                        style={{ '--tab-color': tabColors[i] } as React.CSSProperties}
-                      >
-                        {tab.label}
-                      </TabsTrigger>
-                    );
-                  })}
+                  {SKILL_TABS.map((tab, i) => (
+                    <TabsTrigger
+                      key={tab.value}
+                      value={tab.value}
+                      className="skill-tab font-game text-[10px] game-outline uppercase flex-1 rounded-t-lg rounded-b-none px-3 py-2 border-0 transition-all shadow-none"
+                      style={{ '--tab-color': SKILL_TAB_COLORS[i] } as React.CSSProperties}
+                    >
+                      {tab.label}
+                    </TabsTrigger>
+                  ))}
                 </TabsList>
 
                 {SKILL_TABS.map((tab, i) => {
-                  const tabColors = [
-                    '#4DE94C',
-                    '#FFD8A8',
-                    '#FF3333',
-                  ];
                   const skills = skillsByCategory(tab.value);
                   return (
-                    <TabsContent key={tab.value} value={tab.value} className="mt-0 border-2 border-t-0 border-[hsl(var(--hud-border))] rounded-b-lg p-3 flex-1 overflow-y-auto" style={{ background: `color-mix(in srgb, ${tabColors[i]} 10%, transparent)` }}>
+                    <TabsContent key={tab.value} value={tab.value} className="mt-0 border-2 border-t-0 border-[hsl(var(--hud-border))] rounded-b-lg p-3 flex-1 overflow-y-auto" style={{ background: `color-mix(in srgb, ${SKILL_TAB_COLORS[i]} 10%, transparent)` }}>
                       {skills.length > 0 ? (
                         <div className="grid grid-cols-3 gap-2">
                           {skills.map((skill) => (
