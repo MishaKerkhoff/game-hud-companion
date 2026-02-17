@@ -247,7 +247,7 @@ function QuestCard({ quest }: { quest: TraderQuest }) {
         </span>
       </div>
       <div className="flex items-center gap-1">
-        <Gift size={10} className="text-yellow-400" />
+        <Gift size={10} className="text-yellow-400" style={{ filter: 'drop-shadow(0 0 1px hsl(220 20% 10% / 0.6)) drop-shadow(0 0 0.5px hsl(220 20% 10% / 0.4))' }} />
         <span className="font-game text-[9px] text-yellow-400 uppercase game-outline">
           {quest.reward}
         </span>
