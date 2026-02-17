@@ -258,7 +258,7 @@
     background: hsl(var(--hud-panel));
     border: 4px solid hsl(var(--hud-border));
     border-radius: 16px;
-    box-shadow: 0 6px 30px hsl(0 0% 0% / 0.5), inset 0 1px 0 hsl(0 0% 100% / 0.05);
+    box-shadow: none;
   }
 
   .raider-card-selected {
