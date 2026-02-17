@@ -349,7 +349,7 @@
 
   .skill-tab[data-state="active"] {
     background: color-mix(in srgb, var(--tab-color) 35%, transparent) !important;
-    color: white !important;
+    color: hsl(var(--muted-foreground)) !important;
     box-shadow: none !important;
     border: 2px solid hsl(var(--hud-border)) !important;
     border-bottom: 2px solid color-mix(in srgb, var(--tab-color) 35%, transparent) !important;
