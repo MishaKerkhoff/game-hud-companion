@@ -70,7 +70,7 @@ export default function Craft() {
               {CRAFTING_BENCHES.map((bench, idx) => {
                 const isActive = idx === selectedIndex;
                 return (
-                  <div key={bench.id} className="flex-[0_0_11%] min-w-0 px-1">
+                  <div key={bench.id} className="min-w-0 px-1" style={{ flex: '0 0 90px' }}>
                     <BenchCard bench={bench} isActive={isActive} />
                   </div>
                 );
