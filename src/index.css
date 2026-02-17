@@ -347,13 +347,17 @@
   }
 
   .skill-tab[data-state="active"] {
-    background: var(--tab-color) !important;
+    background: color-mix(in srgb, var(--tab-color) 35%, transparent) !important;
     color: white !important;
     box-shadow: none !important;
+    border: 2px solid hsl(var(--hud-border)) !important;
+    border-bottom: none !important;
   }
 
   .skill-tab[data-state="inactive"] {
-    background: color-mix(in srgb, var(--tab-color) 25%, transparent) !important;
+    background: color-mix(in srgb, var(--tab-color) 15%, transparent) !important;
     color: hsl(var(--muted-foreground)) !important;
+    border: 2px solid hsl(var(--hud-border)) !important;
+    border-bottom: none !important;
   }
 }

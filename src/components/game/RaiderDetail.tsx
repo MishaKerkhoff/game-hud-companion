@@ -164,7 +164,7 @@ export default function RaiderDetail({ raider, onClose }: Props) {
                   ];
                   const skills = skillsByCategory(tab.value);
                   return (
-                    <TabsContent key={tab.value} value={tab.value} className="mt-0 border-2 border-t-0 border-border rounded-b-lg p-3 flex-1 overflow-y-auto">
+                    <TabsContent key={tab.value} value={tab.value} className="mt-0 border-2 border-t-0 border-[hsl(var(--hud-border))] rounded-b-lg p-3 flex-1 overflow-y-auto">
                       {skills.length > 0 ? (
                         <div className="grid grid-cols-3 gap-2">
                           {skills.map((skill) => (
