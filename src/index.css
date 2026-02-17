@@ -9,8 +9,8 @@
     --background: 216 33% 97%;
     --foreground: 40 18% 82%;
 
-    --card: 55 12% 10%;
-    --card-foreground: 40 18% 82%;
+    --card: 39 18% 80%;
+    --card-foreground: 60 14% 8%;
 
     --popover: 55 12% 10%;
     --popover-foreground: 40 18% 82%;
@@ -47,8 +47,8 @@
     --rarity-rare: 207 27% 47%;
     --rarity-epic: 330 61% 52%;
     --rarity-legendary: 30 100% 64%;
-    --hud-panel: 55 14% 8%;
-    --hud-border: 48 10% 21%;
+    --hud-panel: 39 18% 80%;
+    --hud-border: 38 15% 65%;
     --hud-glow: 30 100% 64%;
     --slot-bg: 52 12% 12%;
     --slot-border: 48 10% 21%;
